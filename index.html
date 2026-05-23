@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>工程技能赛项 火星探险规则</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <meta name="description" content="工程技能赛项火星探险规则互动网页。" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="topbar" aria-label="页面导航">
+        <a class="brand" href="#top" aria-label="返回顶部">
+          <span class="brand-mark" aria-hidden="true">M</span>
+          <span>火星探险</span>
+        </a>
+        <div class="nav-links">
+          <a href="#overview">概览</a>
+          <a href="#reader">规则全文</a>
+        </div>
+      </nav>
+
+      <section id="top" class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">工程技能赛项规则文件</p>
+          <h1>工程技能赛项<br />火星探险规则</h1>
+          <p class="lead">
+            面向参赛队伍、指导教师与裁判的互动规则网页，集中查看赛项说明、关键规则与完整文件。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#reader">阅读规则</a>
+            <a class="button secondary" href="./mars-exploration-rules.pdf" download>下载 PDF</a>
+          </div>
+        </div>
+
+        <a class="cover-card" href="./mars-exploration-rules.pdf" target="_blank" rel="noreferrer" aria-label="打开规则 PDF">
+          <img src="./assets/mars-exploration-rules.pdf.png" alt="工程技能赛项火星探险规则 PDF 封面预览" />
+          <span>打开原始 PDF</span>
+        </a>
+      </section>
+    </header>
+
+    <main>
+      <section id="overview" class="section overview">
+        <div class="section-title">
+          <p class="eyebrow">网页化整理</p>
+          <h2>规则文档一站式交付</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature">
+            <span class="feature-index">01</span>
+            <h3>保留原始版式</h3>
+            <p>页面内嵌原 PDF，保证图文、表格、页码和规则细节与原文件一致。</p>
+          </article>
+          <article class="feature">
+            <span class="feature-index">02</span>
+            <h3>适合现场查阅</h3>
+            <p>顶部导航、阅读区和下载入口清晰分区，适合赛事说明、培训和提交。</p>
+          </article>
+          <article class="feature">
+            <span class="feature-index">03</span>
+            <h3>互动阅读体验</h3>
+            <p>可在页面内浏览规则全文，也可一键打开原文件或下载保存。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="reader" class="section reader-section">
+        <div class="reader-heading">
+          <div>
+            <p class="eyebrow">PDF 阅读器</p>
+            <h2>规则全文</h2>
+          </div>
+          <div class="reader-tools" aria-label="阅读工具">
+            <a class="tool-button" href="./mars-exploration-rules.pdf" target="_blank" rel="noreferrer">新窗口打开</a>
+            <a class="tool-button" href="./mars-exploration-rules.pdf" download>下载</a>
+          </div>
+        </div>
+
+        <div class="pdf-frame">
+          <object data="./mars-exploration-rules.pdf#view=FitH" type="application/pdf">
+            <div class="fallback">
+              <h3>当前浏览器无法直接显示 PDF</h3>
+              <p>请使用下方按钮打开或下载规则原件。</p>
+              <a class="button primary" href="./mars-exploration-rules.pdf" target="_blank" rel="noreferrer">打开 PDF</a>
+            </div>
+          </object>
+        </div>
+
+        <div class="reader-note">
+          <strong>阅读提示</strong>
+          <span>如果当前浏览器无法在页面中预览 PDF，请点击“新窗口打开”或“下载”。</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>工程技能赛项 火星探险规则</span>
+      <a href="#top">返回顶部</a>
+    </footer>
+  </body>
+</html>
