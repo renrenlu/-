@@ -53,7 +53,6 @@
         <div class="section-head">
           <p class="eyebrow">规则索引</p>
           <h2>点击标题查看对应规则</h2>
-          <p>我按 PDF 目录和正文层级做了筛选：章节、规则条目、任务标题、空间关系和计分表入口都可点击；表格里的普通字段没有单独做按钮。</p>
         </div>
 
         <div class="rule-layout">
@@ -71,11 +70,16 @@
           <article class="rule-card" id="ruleCard" tabindex="-1" aria-live="polite">
             <div class="rule-card-top">
               <span class="rule-tag" id="ruleTag">章节</span>
-              <a class="pdf-link" id="rulePdfLink" href="./mars-exploration-rules.pdf" target="_blank" rel="noreferrer">查看原文页</a>
+              <a class="pdf-link" id="rulePdfLink" href="#pdf">定位到原文页</a>
             </div>
             <h3 id="ruleTitle"></h3>
             <div id="ruleMeta" class="rule-meta"></div>
             <div id="ruleBody" class="rule-body"></div>
+            <div id="ruleTable" class="rule-table-wrap"></div>
+            <figure class="page-preview">
+              <img id="rulePageImage" src="./assets/pages/page-04.png" alt="对应 PDF 页面预览" />
+              <figcaption id="rulePageCaption">PDF 原文页预览</figcaption>
+            </figure>
           </article>
         </div>
       </section>
@@ -90,7 +94,7 @@
           <a class="button secondary" href="./mars-exploration-rules.pdf" download>下载 PDF</a>
         </div>
         <div class="pdf-frame">
-          <object data="./mars-exploration-rules.pdf#view=FitH" type="application/pdf">
+          <object id="pdfObject" data="./mars-exploration-rules.pdf#view=FitH" type="application/pdf">
             <div class="fallback">
               <h3>当前浏览器无法直接显示 PDF</h3>
               <p>请使用上方按钮打开或下载规则原件。</p>

@@ -437,6 +437,50 @@ const meta = document.querySelector("#ruleMeta");
 const body = document.querySelector("#ruleBody");
 const pdfLink = document.querySelector("#rulePdfLink");
 const card = document.querySelector("#ruleCard");
+const tableWrap = document.querySelector("#ruleTable");
+const pageImage = document.querySelector("#rulePageImage");
+const pageCaption = document.querySelector("#rulePageCaption");
+const pdfObject = document.querySelector("#pdfObject");
+
+const scoreTables = {
+  "task-1": [["比赛结束时，螺旋桨与支架没有任何接触", "15", "15"]],
+  "task-2": [
+    ["成功添加一个固体燃料，且火箭发射平台和固体燃料没有接触任何团队器材", "10", "25"],
+    ["成功添加两个固体燃料，且火箭发射平台和固体燃料没有接触任何团队器材", "25", "25"]
+  ],
+  "task-3": [
+    ["仅将气动阀门指针拨至西侧灰色管路方向", "10", "35"],
+    ["切换阀门并转动气泵开关，矿石借助重力沿滑道自然滚落到场地膜上", "35", "35"]
+  ],
+  "task-4": [
+    ["风帆车前轮投影部分或完全在一星区域内", "10", "40"],
+    ["风帆车前轮投影部分或完全在二星区域内", "20", "40"],
+    ["风帆车前轮投影部分或完全在三星区域内", "30", "40"],
+    ["风帆车前轮投影部分或完全在冠军区域内", "40", "40"],
+    ["比赛过程中设备或队员触碰风帆车", "0", "40"]
+  ],
+  "task-5": [["压力表指针针尖部分指向 315 刻度线", "20", "20"]],
+  "task-6": [
+    ["光伏板垂直顶端高度超过光伏支架垂直顶端高度，且未接触团队器材", "10", "25"],
+    ["光伏支架停留至红色标线左侧，投影未落于红色标线上，且未接触团队器材", "15", "25"]
+  ],
+  "task-7": [
+    ["每有一个保龄球瓶被设备释放/发射的球体撞倒，且没有接触任何团队器材", "5/个", "30"],
+    ["释放/发射球体时，设备投影没有处于菱形区域内", "0", "30"],
+    ["保龄球瓶并非设备释放/发射的球体撞击所致", "0", "30"]
+  ],
+  "task-8": [
+    ["土壤道具完全离开初始标定位置，但未被运送至实验室", "5/个", "30"],
+    ["土壤道具被运送至实验室区域内，且未接触实验室外侧场地膜及团队器材", "10/个", "30"]
+  ],
+  "task-9": [["设备拉出拉杆并成功触发火星车弹射，火星车投影完全脱离初始标定位置，且相关道具未接触团队器材", "25", "25"]],
+  "task-10": [["摇床调整至东低西高，矿石滚落至摇床东侧低处，且摇床与矿石道具均未接触团队器材", "20", "20"]],
+  "task-11": [["设备将天线提升至支架顶端，且支架和天线道具没有接触团队器材", "40", "40"]],
+  "task-12": [["设备沿南北轴向完全穿过支架下方，从支架一侧进入并从另一侧完全离开支架区域", "35", "35"]],
+  "task-13": [["设备将营地承重结构修复成规范形态，且营地没有接触任何团队器材", "20", "20"]],
+  "task-14": [["生命微仓被运送至实验室区域内，且未接触实验室外侧场地膜及任何团队器材", "10", "10"]],
+  "task-15": [["第一次营救不扣分，以后每次营救扣 8 分，扣完后不再减分", "40 / 32 / 24 / 16 / 8 / 0", "40"]]
+};
 
 function makeChip(rule) {
   const button = document.createElement("button");
@@ -461,8 +505,14 @@ function activateRule(ruleId, moveFocus = false) {
 
   tag.textContent = rule.tag;
   title.textContent = rule.title;
-  pdfLink.href = `./mars-exploration-rules.pdf#page=${rule.page}&zoom=page-fit`;
-  pdfLink.textContent = `跳转原文第 ${rule.page} 页`;
+  const pdfPageUrl = `./mars-exploration-rules.pdf#page=${rule.page}&zoom=page-fit`;
+  pdfLink.href = "#pdf";
+  pdfLink.textContent = `定位原文第 ${rule.page} 页`;
+  pdfLink.onclick = (event) => {
+    event.preventDefault();
+    pdfObject.data = pdfPageUrl;
+    document.querySelector("#pdf").scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   meta.innerHTML = "";
   rule.meta.forEach((item) => {
@@ -485,6 +535,31 @@ function activateRule(ruleId, moveFocus = false) {
     box.textContent = item.score;
     body.appendChild(box);
   });
+
+  tableWrap.innerHTML = "";
+  const rows = scoreTables[rule.id];
+  if (rows) {
+    const table = document.createElement("table");
+    table.className = "score-table";
+    table.innerHTML = "<thead><tr><th>状态 / 描述</th><th>得分</th><th>最高分</th></tr></thead>";
+    const tbody = document.createElement("tbody");
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+      row.forEach((cell) => {
+        const td = document.createElement("td");
+        td.textContent = cell;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+  }
+
+  const pageNumber = String(rule.page).padStart(2, "0");
+  pageImage.src = `./assets/pages/page-${pageNumber}.png`;
+  pageImage.alt = `${rule.title} 对应 PDF 第 ${rule.page} 页`;
+  pageCaption.textContent = `对应 PDF 原文第 ${rule.page} 页`;
 
   if (moveFocus) {
     card.focus({ preventScroll: true });
