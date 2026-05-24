@@ -12,8 +12,31 @@ const generalRules = [
     ]
   },
   {
+    id: "event-info",
+    title: "（一）世界机器人大会—青少年机器人设计与信息素养大赛—工程技能赛项",
+    tag: "章节",
+    page: 4,
+    meta: ["年度主题", "工程技能", "STEAM"],
+    body: [
+      "2026 年工程技能赛项由各种比赛组成。比赛年度主题基于社会热点话题设计，各年龄段团队需完成难度不同的挑战任务。",
+      "团队的任务是设计一个机器人，解决比赛环境中的各种任务和挑战。任务聚焦科学、技术、工程、艺术和数学，鼓励年轻人发展审辩式思维和 21 世纪技能。",
+      "2026 年工程技能赛项包括工程技能赛项——火星探险——小学组，以及工程技能赛项——火星探险——中学组。"
+    ]
+  },
+  {
+    id: "team",
+    title: "二、团队定义、期望",
+    tag: "章节",
+    page: 5,
+    meta: ["团队组成", "公平比赛", "独立完成"],
+    body: [
+      "本章说明参赛团队年龄组、团队组成以及比赛中的行为期望。",
+      "团队应公平比赛，尊重其他队伍、教练、裁判和比赛组织者。机器人的建构和程序编写只能由团队队员完成。"
+    ]
+  },
+  {
     id: "team-definition",
-    title: "二、团队定义",
+    title: "（一）团队定义",
     tag: "章节",
     page: 5,
     meta: ["小学组 9-12 周岁", "中学组 12-16 周岁"],
@@ -25,7 +48,7 @@ const generalRules = [
   },
   {
     id: "team-expectation",
-    title: "团队期望",
+    title: "（二）团队的期望",
     tag: "章节",
     page: 5,
     meta: ["公平比赛", "队员独立完成"],
@@ -36,8 +59,19 @@ const generalRules = [
     ]
   },
   {
+    id: "rules-chapter",
+    title: "三、赛项规则",
+    tag: "赛项规则",
+    page: 5,
+    meta: ["词语解释", "场地材料", "比赛流程"],
+    body: [
+      "本章包含词语解释、场地规格和材料、设备材料及控制方式，以及火星探险赛项的比赛流程、计分、犯规和争议处理规则。",
+      "参赛队伍应优先按照文字规则理解和执行比赛要求。"
+    ]
+  },
+  {
     id: "terms",
-    title: "三（一）词语解释",
+    title: "（一）词语解释",
     tag: "赛项规则",
     page: 5,
     meta: ["机器人", "设备", "场地", "营救"],
@@ -49,7 +83,7 @@ const generalRules = [
   },
   {
     id: "field",
-    title: "三（二）场地的规格和材料",
+    title: "（二）场地的规格和材料",
     tag: "赛项规则",
     page: 7,
     meta: ["1140mm x 2360mm", "2 个启动区", "13 个任务区"],
@@ -61,7 +95,7 @@ const generalRules = [
   },
   {
     id: "materials",
-    title: "三（三）设备材料及控制方式",
+    title: "（三）设备材料及控制方式",
     tag: "赛项规则",
     page: 8,
     meta: ["1 台机器人", "自主模式", "禁止遥控"],
@@ -72,8 +106,19 @@ const generalRules = [
     ]
   },
   {
+    id: "mission-rules",
+    title: "（四）工程技能赛项——火星探险（小学/中学组）赛项规则",
+    tag: "流程规则",
+    page: 10,
+    meta: ["设备启动前", "比赛期间", "计分与争议"],
+    body: [
+      "本节规定设备启动前、启动时、比赛期间、比赛结束、计分、犯规和争议处理等完整比赛流程。",
+      "团队应在启动区、营救、任务道具移动、自主运行和停止比赛等关键节点严格遵守本节规则。"
+    ]
+  },
+  {
     id: "before-start",
-    title: "赛项规则：设备启动前",
+    title: "1.设备启动前",
     tag: "流程规则",
     page: 10,
     meta: ["检录检查", "启动区限制", "赛前准备"],
@@ -85,7 +130,7 @@ const generalRules = [
   },
   {
     id: "start",
-    title: "赛项规则：设备启动时",
+    title: "2.设备启动时",
     tag: "流程规则",
     page: 11,
     meta: ["倒计时开始", "150 秒"],
@@ -97,7 +142,7 @@ const generalRules = [
   },
   {
     id: "during",
-    title: "赛项规则：设备比赛期间",
+    title: "3.设备比赛期间",
     tag: "流程规则",
     page: 12,
     meta: ["自主运行", "启动区触碰", "任务道具规则"],
@@ -109,7 +154,7 @@ const generalRules = [
   },
   {
     id: "finish",
-    title: "赛项规则：比赛结束",
+    title: "4.比赛结束",
     tag: "流程规则",
     page: 13,
     meta: ["150 秒结束", "停止口令", "三次警告"],
@@ -121,7 +166,7 @@ const generalRules = [
   },
   {
     id: "score",
-    title: "赛项规则：关于计分",
+    title: "5.关于计分",
     tag: "流程规则",
     page: 14,
     meta: ["按结束状态计分", "最佳单轮成绩", "签字确认"],
@@ -133,7 +178,7 @@ const generalRules = [
   },
   {
     id: "violation",
-    title: "赛项规则：犯规和取消资格",
+    title: "6.关于犯规和取消比赛资格",
     tag: "流程规则",
     page: 15,
     meta: ["常规警告", "第三次成绩为零"],
@@ -145,7 +190,7 @@ const generalRules = [
   },
   {
     id: "dispute",
-    title: "赛项规则：关于争议",
+    title: "7.关于争议",
     tag: "流程规则",
     page: 15,
     meta: ["裁判长最终裁决", "文字高于图片"],
@@ -157,7 +202,18 @@ const generalRules = [
   },
   {
     id: "props",
-    title: "四（一）任务道具和位置说明",
+    title: "四、任务道具、任务介绍",
+    tag: "任务介绍",
+    page: 16,
+    meta: ["任务道具", "任务描述"],
+    body: [
+      "本章包含任务道具和位置说明，以及 15 个任务的完整任务描述与得分规则。",
+      "建议先查看任务道具和位置说明，再查看下方任务标题。"
+    ]
+  },
+  {
+    id: "props-location",
+    title: "（一）任务道具和位置说明",
     tag: "任务介绍",
     page: 16,
     meta: ["模型名称", "位置说明", "道具描述"],
@@ -165,6 +221,17 @@ const generalRules = [
       "本节列出螺旋桨支架、螺旋桨、火箭发射平台、固体燃料、矿石、风帆车、平衡阀、光伏设备、保龄球瓶、土壤样本、弹射装置、火星车、摇床、VHF 天线、营地、生命微仓等道具。",
       "部分任务道具需固定在场地膜标定位置，部分任务道具需要被设备运输或操作。",
       "图片中任务道具的积木元件颜色可能与套装中的积木元件颜色不符，以现场与规则说明为准。"
+    ]
+  },
+  {
+    id: "task-description",
+    title: "（二）任务描述",
+    tag: "任务介绍",
+    page: 20,
+    meta: ["15 个任务", "得分规则", "最高分"],
+    body: [
+      "本节逐项说明实验准备、燃料补给、矿石运输、受风实验、极限对接、光伏调试、保龄社交、寻找生命、弹射运输、矿石分选、通信优化、机器检修、营地维护、生命微仓和营救奖励。",
+      "下方“任务标题”索引已按 PDF 顺序整理，可直接点击查看对应任务。"
     ]
   },
   {
@@ -394,8 +461,8 @@ function activateRule(ruleId, moveFocus = false) {
 
   tag.textContent = rule.tag;
   title.textContent = rule.title;
-  pdfLink.href = `./mars-exploration-rules.pdf#page=${rule.page}`;
-  pdfLink.textContent = `查看原文 P${rule.page}`;
+  pdfLink.href = `./mars-exploration-rules.pdf#page=${rule.page}&zoom=page-fit`;
+  pdfLink.textContent = `跳转原文第 ${rule.page} 页`;
 
   meta.innerHTML = "";
   rule.meta.forEach((item) => {
