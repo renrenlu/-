@@ -1,0 +1,19 @@
+{
+  "name": "节序万年历",
+  "short_name": "节序",
+  "description": "任何人都能直接上手的生活日历 App，支持公历、农历、节气、节假日、提醒与倒计时。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f4f6",
+  "theme_color": "#ea5b96",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "./assets/icon-calendar.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

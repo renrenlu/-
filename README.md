@@ -1,3 +1,21 @@
-# 工程技能赛项 火星探险规则
+# 节序万年历
 
-互动规则网页，入口为 `index.html`。
+移动端优先的万年历 App 原型，包含公历、农历、节气、法定节假日、提醒、个人日程、倒计时和拼假工具。
+
+## 入口
+
+- 页面入口：`index.html`
+- 样式：`styles.css`
+- 交互：`script.js`
+- 日历数据：`calendar-data.js`
+- 本地持久化：`user-data-store.js`
+
+## 日常维护
+
+- 改视觉：优先改 `styles.css` 顶部变量区
+- 改文案和模块顺序：改 `index.html`
+- 改节日、节气、假期数据：改 `calendar-data.js`
+- 改提醒、日程、主题等交互：改 `script.js`
+- 改本机保存逻辑：改 `user-data-store.js`
+
+更详细的维护方式见 [维护说明.md](/Users/ren/Documents/可交互网页/维护说明.md)。
