@@ -1,0 +1,51 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare site files
+        run: |
+          mkdir -p site
+          cp index.html site/index.html
+          cp styles.css site/styles.css
+          cp script.js site/script.js
+          cp calendar-data.js site/calendar-data.js
+          cp user-data-store.js site/user-data-store.js
+          cp manifest.webmanifest site/manifest.webmanifest
+          cp service-worker.js site/service-worker.js
+          cp .nojekyll site/.nojekyll
+          cp -R assets site/assets
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
