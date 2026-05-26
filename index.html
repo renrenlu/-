@@ -3,258 +3,112 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>节序万年历</title>
-    <meta
-      name="description"
-      content="一款融合公历、农历、节气、法定节假日、轻量黄历、提醒、倒计时与拼假建议的万年历原型。"
-    />
-    <meta name="theme-color" content="#ea5b96" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="节序万年历" />
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="icon" href="./assets/icon-calendar.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./assets/icon-calendar.svg" />
+    <title>工程技能赛项—火星探险竞赛规则规程</title>
     <link rel="stylesheet" href="./styles.css" />
+    <meta name="description" content="工程技能赛项火星探险规则互动网页。" />
   </head>
   <body>
-    <div class="app-shell">
-      <header class="hero" id="top">
-        <nav class="nav" aria-label="主导航">
-          <a class="brand" href="#top">
-            <span class="brand-mark">节</span>
-            <span class="brand-copy">
-              <strong>节序万年历</strong>
-              <small>所有人都能直接上手的生活日历 App</small>
-            </span>
-          </a>
-          <div class="nav-actions">
-            <a href="#calendarSection">看日历</a>
-            <a href="#toolsSection">看工具</a>
-            <button type="button" class="ghost-button is-hidden" id="installAppButton">安装 App</button>
-            <button type="button" class="ghost-button" id="jumpTodayButton">回到今天</button>
-          </div>
-        </nav>
+    <header class="site-header" id="top">
+      <nav class="nav" aria-label="页面导航">
+        <a class="brand" href="#top">Mars Mission Rules</a>
+        <div class="nav-links">
+          <a href="#rules">规则索引</a>
+          <a href="#pdf">PDF 原文</a>
+        </div>
+      </nav>
 
-        <section class="hero-grid">
-          <div class="hero-copy">
-            <p class="eyebrow">公历 / 农历 / 节气 / 节假日 / 提醒 / 拼假</p>
-            <h1>把今天和接下来的日子，<br />安排得清清楚楚</h1>
-            <p class="lead">公历、农历、节气、假期、提醒和个人日程，都能在这里一眼看清。</p>
-            <div class="hero-actions">
-              <a class="button primary" href="#calendarSection">打开今日视图</a>
-              <a class="button secondary" href="#toolsSection">查看计划工具</a>
-            </div>
-            <div class="hero-meta" id="heroMeta"></div>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">世界机器人大会青少年机器人设计与信息素养大赛</p>
+          <h1>工程技能赛项—火星探险（小学/中学组）竞赛规则规程</h1>
+          <p class="lead">从规则目录到任务得分，一键切换查看对应内容，并可直接打开 PDF 原文所在页。</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#rules">开始查看</a>
+            <a class="button secondary" href="./mars-exploration-rules.pdf" target="_blank" rel="noreferrer">打开 PDF</a>
           </div>
+        </div>
+        <a class="cover" href="./mars-exploration-rules.pdf" target="_blank" rel="noreferrer" aria-label="打开 PDF 原文">
+          <img src="./assets/mars-exploration-rules.pdf.png" alt="火星探险规则 PDF 封面" />
+        </a>
+      </section>
+    </header>
 
-          <aside class="hero-panel">
-            <div class="today-head">
-              <p class="panel-label">今日概览</p>
-              <h2 id="heroDateText">2026.05.25</h2>
-              <p id="heroLunarText">农历四月初九</p>
+    <main>
+      <section class="section intro">
+        <div class="stat">
+          <strong>5</strong>
+          <span>目录章节</span>
+        </div>
+        <div class="stat">
+          <strong>7</strong>
+          <span>赛项规则条目</span>
+        </div>
+        <div class="stat">
+          <strong>15</strong>
+          <span>任务标题</span>
+        </div>
+      </section>
+
+      <section class="section rules" id="rules">
+        <div class="section-head">
+          <p class="eyebrow">规则索引</p>
+          <h2>点击标题查看对应规则</h2>
+        </div>
+
+        <div class="rule-layout">
+          <aside class="index-panel" aria-label="规则标题索引">
+            <div class="index-group">
+              <h3>目录与通用规则</h3>
+              <div class="chip-list" id="generalIndex"></div>
             </div>
-            <div class="today-tags" id="heroTags"></div>
-            <div class="today-quote">
-              <p class="panel-label">今日一句</p>
-              <blockquote id="quoteText"></blockquote>
-              <cite id="quoteSource"></cite>
-            </div>
-            <div class="theme-lab">
-              <div class="card-head">
-                <p class="panel-label">主题实验室</p>
-                <span id="themeNameText">玫红模式</span>
-              </div>
-              <div class="theme-presets" id="themePresetList" aria-label="主题预设">
-                <button type="button" class="theme-swatch" data-theme-preset="rose" aria-label="玫红模式"></button>
-                <button type="button" class="theme-swatch" data-theme-preset="amber" aria-label="黑金模式"></button>
-                <button type="button" class="theme-swatch" data-theme-preset="tiffany" aria-label="提夫尼蓝模式"></button>
-              </div>
+            <div class="index-group">
+              <h3>任务标题</h3>
+              <div class="chip-list task-list" id="taskIndex"></div>
             </div>
           </aside>
-        </section>
-      </header>
 
-      <main>
-        <section class="calendar-section" id="calendarSection">
-          <div class="calendar-layout">
-            <article class="calendar-panel">
-              <div class="calendar-toolbar">
-                <div>
-                  <p class="panel-label">月视图</p>
-                  <h3 id="calendarTitle">2026 年 5 月</h3>
-                </div>
-                <div class="toolbar-actions">
-                  <button type="button" class="icon-button" id="prevMonthButton" aria-label="上一个月">‹</button>
-                  <button type="button" class="icon-button" id="nextMonthButton" aria-label="下一个月">›</button>
-                </div>
-              </div>
+          <article class="rule-card" id="ruleCard" tabindex="-1" aria-live="polite">
+            <div class="rule-card-top">
+              <span class="rule-tag" id="ruleTag">章节</span>
+              <a class="pdf-link" id="rulePdfLink" href="#pdf">定位到原文页</a>
+            </div>
+            <h3 id="ruleTitle"></h3>
+            <div id="ruleMeta" class="rule-meta"></div>
+            <div id="ruleBody" class="rule-body"></div>
+            <div id="ruleTable" class="rule-table-wrap"></div>
+            <figure class="page-preview">
+              <img id="rulePageImage" src="./assets/pages/page-04.png" alt="对应 PDF 页面预览" />
+              <figcaption id="rulePageCaption">PDF 原文页预览</figcaption>
+            </figure>
+          </article>
+        </div>
+      </section>
 
-              <div class="weekday-row" aria-hidden="true">
-                <span>一</span>
-                <span>二</span>
-                <span>三</span>
-                <span>四</span>
-                <span>五</span>
-                <span>六</span>
-                <span>日</span>
-              </div>
-              <div class="calendar-grid" id="calendarGrid" role="grid" aria-label="月历"></div>
-              <div class="legend">
-                <span><i class="dot holiday"></i>法定休假</span>
-                <span><i class="dot makeup"></i>调休上班</span>
-                <span><i class="dot solar"></i>节气/节日</span>
-                <span><i class="dot reminder"></i>提醒</span>
-              </div>
-            </article>
+      <section class="section pdf-section" id="pdf">
+        <div class="section-head">
+          <p class="eyebrow">PDF 原文</p>
+          <h2>完整规则文件</h2>
+        </div>
+        <div class="pdf-actions">
+          <a class="button secondary" href="./mars-exploration-rules.pdf" target="_blank" rel="noreferrer">新窗口打开</a>
+          <a class="button secondary" href="./mars-exploration-rules.pdf" download>下载 PDF</a>
+        </div>
+        <div class="pdf-frame">
+          <object id="pdfObject" data="./mars-exploration-rules.pdf#view=FitH" type="application/pdf">
+            <div class="fallback">
+              <h3>当前浏览器无法直接显示 PDF</h3>
+              <p>请使用上方按钮打开或下载规则原件。</p>
+            </div>
+          </object>
+        </div>
+      </section>
+    </main>
 
-            <aside class="detail-column">
-              <article class="detail-card focus-card">
-                <div class="card-head">
-                  <p class="panel-label">选中日期</p>
-                  <span class="date-pill" id="selectedDatePill">今天</span>
-                </div>
-                <h3 id="selectedDateTitle">5 月 25 日 星期一</h3>
-                <p class="detail-subtitle" id="selectedLunarText">农历四月初九 · 丙午年</p>
-                <div class="tag-group" id="selectedTags"></div>
-                <div class="today-grid">
-                  <div>
-                    <span>生肖</span>
-                    <strong id="selectedZodiac">马</strong>
-                  </div>
-                  <div>
-                    <span>星座</span>
-                    <strong id="selectedStarSign">双子座</strong>
-                  </div>
-                  <div>
-                    <span>宜</span>
-                    <strong id="selectedYi">整理、沟通、复盘</strong>
-                  </div>
-                  <div>
-                    <span>忌</span>
-                    <strong id="selectedJi">拖延、熬夜</strong>
-                  </div>
-                </div>
-                <p class="advice" id="selectedAdvice"></p>
-              </article>
+    <footer class="footer">
+      <span>工程技能赛项——火星探险</span>
+      <a href="#top">返回顶部</a>
+    </footer>
 
-              <article class="detail-card solar-card">
-                <div class="card-head">
-                  <p class="panel-label">节气卡片</p>
-                  <span id="solarPhaseBadge">当前节气</span>
-                </div>
-                <h3 id="solarTermTitle">小满</h3>
-                <p id="solarTermDateText"></p>
-                <p id="solarTermDescription"></p>
-                <div class="mini-list" id="solarMetaList"></div>
-              </article>
-
-              <article class="detail-card reminder-card">
-                <div class="card-head">
-                  <p class="panel-label">提醒与安排</p>
-                  <span id="reminderCountText">0 条</span>
-                </div>
-                <form class="reminder-form" id="reminderForm">
-                  <input id="reminderTitleInput" name="title" type="text" maxlength="24" placeholder="添加提醒，例如：交房租" required />
-                  <div class="reminder-row">
-                    <input id="reminderDateInput" name="date" type="date" required />
-                    <button type="submit" class="button primary small">添加</button>
-                  </div>
-                </form>
-                <div class="reminder-list" id="reminderList"></div>
-              </article>
-
-              <article class="detail-card schedule-card">
-                <div class="card-head">
-                  <p class="panel-label">个人日程</p>
-                  <span id="scheduleCountText">0 项</span>
-                </div>
-                <form class="schedule-form" id="scheduleForm">
-                  <input id="scheduleTitleInput" name="title" type="text" maxlength="28" placeholder="添加日程，例如：体检 / 开会 / 接孩子" required />
-                  <div class="schedule-grid">
-                    <input id="scheduleDateInput" name="date" type="date" required />
-                    <input id="scheduleTimeInput" name="time" type="time" />
-                  </div>
-                  <textarea id="scheduleNoteInput" name="note" rows="3" maxlength="80" placeholder="备注（可选）"></textarea>
-                  <button type="submit" class="button primary small">保存日程</button>
-                </form>
-                <div class="schedule-list" id="scheduleList"></div>
-              </article>
-            </aside>
-          </div>
-        </section>
-
-        <section class="quick-strip" id="quickStrip" aria-label="近期重点"></section>
-
-        <section class="tools-section" id="toolsSection">
-          <div class="section-heading">
-            <p class="eyebrow">Tools</p>
-            <h2>日期计算、拼假和倒计时，随手就能用</h2>
-          </div>
-
-          <div class="tool-grid">
-            <article class="tool-card">
-              <div class="card-head">
-                <p class="panel-label">日期计算</p>
-                <span>相差天数 / 推算未来日期</span>
-              </div>
-              <form id="dateDiffForm" class="stack-form">
-                <label>
-                  <span>开始日期</span>
-                  <input id="diffStartInput" type="date" required />
-                </label>
-                <label>
-                  <span>结束日期</span>
-                  <input id="diffEndInput" type="date" required />
-                </label>
-                <button type="submit" class="button primary">立即计算</button>
-              </form>
-              <div class="tool-result" id="dateDiffResult"></div>
-            </article>
-
-            <article class="tool-card">
-              <div class="card-head">
-                <p class="panel-label">拼假助手</p>
-                <span>优先展示 2025-2026 官方节假日安排</span>
-              </div>
-              <div class="planner-list" id="leavePlannerList"></div>
-            </article>
-
-            <article class="tool-card">
-              <div class="card-head">
-                <p class="panel-label">倒计时</p>
-                <span>常用节点和下一个节气都放这里</span>
-              </div>
-              <div class="countdown-list" id="countdownList"></div>
-            </article>
-          </div>
-        </section>
-
-      </main>
-
-      <footer class="footer">
-        <span>节序万年历原型</span>
-        <a href="#top">回到顶部</a>
-      </footer>
-
-      <nav class="app-dock" aria-label="App 导航">
-        <a class="dock-item is-active" href="#top" data-dock-target="top">
-          <span>今日</span>
-          <small>Home</small>
-        </a>
-        <a class="dock-item" href="#calendarSection" data-dock-target="calendarSection">
-          <span>月历</span>
-          <small>Calendar</small>
-        </a>
-        <a class="dock-item" href="#toolsSection" data-dock-target="toolsSection">
-          <span>计划</span>
-          <small>Plan</small>
-        </a>
-      </nav>
-    </div>
-
-    <script src="./calendar-data.js"></script>
-    <script src="./user-data-store.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
