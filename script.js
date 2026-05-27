@@ -336,14 +336,7 @@ function renderCalendar() {
     button.setAttribute("role", "gridcell");
     button.setAttribute("aria-label", `${formatDateTitle(date)}，${note}`);
     button.addEventListener("click", () => {
-      state.selectedDate = date;
-      state.viewYear = date.getFullYear();
-      state.viewMonth = date.getMonth();
-      renderCalendar();
-      renderSelectedDetail();
-      renderReminders();
-      renderSchedules();
-      void persistCalendarView();
+      selectDate(date, { revealDetail: true });
     });
 
     const badge = holiday
@@ -622,9 +615,13 @@ async function handleScheduleSubmit(event) {
   state.schedules.push(schedule);
   state.schedules.sort(compareSchedules);
   dom.scheduleForm.reset();
-  dom.scheduleDateInput.value = formatISO(state.selectedDate);
-  renderSelectedDetail();
-  renderSchedules();
+  const scheduleDate = parseISODate(schedule.date);
+  if (scheduleDate) {
+    selectDate(scheduleDate, { revealDetail: true });
+  } else {
+    renderSelectedDetail();
+    renderSchedules();
+  }
   renderCountdowns();
   renderDataStatus();
 }
@@ -1010,6 +1007,31 @@ function countSchedulesOnDate(date) {
 function getSchedulesForDate(date) {
   const iso = formatISO(date);
   return state.schedules.filter((item) => item.date === iso).sort(compareSchedules);
+}
+
+function selectDate(date, options = {}) {
+  state.selectedDate = startOfDay(date);
+  state.viewYear = state.selectedDate.getFullYear();
+  state.viewMonth = state.selectedDate.getMonth();
+  renderCalendar();
+  renderSelectedDetail();
+  renderReminders();
+  renderSchedules();
+  if (options.revealDetail) {
+    revealSelectedDetail();
+  }
+  void persistCalendarView();
+}
+
+function revealSelectedDetail() {
+  const target = dom.selectedDateTitle?.closest(".focus-card");
+  if (!target) {
+    return;
+  }
+
+  window.setTimeout(() => {
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 50);
 }
 
 function renderSelectedSchedulePreview(schedules) {

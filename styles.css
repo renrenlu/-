@@ -873,6 +873,10 @@ h3 {
   margin-top: 16px;
 }
 
+.selected-schedule-preview:empty {
+  display: none;
+}
+
 .selected-schedule-head {
   color: var(--accent-deep);
   font-size: 12px;
@@ -905,6 +909,10 @@ h3 {
   margin-bottom: 0;
   color: var(--muted);
   line-height: 1.7;
+}
+
+.focus-card {
+  scroll-margin-top: 14px;
 }
 
 .reminder-form,
