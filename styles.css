@@ -736,8 +736,20 @@ h3 {
   margin-top: auto;
 }
 
+.schedule-markers {
+  display: flex;
+  gap: 4px;
+}
+
 .reminder-markers i,
 .dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.schedule-markers i {
   display: inline-block;
   width: 8px;
   height: 8px;
@@ -771,6 +783,11 @@ h3 {
 .dot.reminder,
 .reminder-markers i {
   background: var(--accent);
+}
+
+.dot.schedule,
+.schedule-markers i {
+  background: var(--mint);
 }
 
 .detail-column {
@@ -848,6 +865,46 @@ h3 {
 
 .today-grid strong {
   font-size: 15px;
+}
+
+.selected-schedule-preview {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.selected-schedule-head {
+  color: var(--accent-deep);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.selected-schedule-list {
+  display: grid;
+  gap: 10px;
+}
+
+.selected-schedule-item {
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.46);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(253, 249, 251, 0.92), rgba(247, 241, 244, 0.88));
+}
+
+.selected-schedule-item.is-done {
+  opacity: 0.72;
+}
+
+.selected-schedule-item strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.selected-schedule-item p {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.7;
 }
 
 .reminder-form,
@@ -1203,7 +1260,7 @@ h3 {
 /* Mobile-first app layout refresh */
 @media (max-width: 760px) {
   :root {
-    --title-hero-size: clamp(24px, 6.8vw, 34px);
+    --title-hero-size: clamp(36px, 10.2vw, 50px);
     --title-section-size: clamp(24px, 6vw, 30px);
     --title-card-size: 22px;
     --title-detail-size: 20px;
@@ -1286,7 +1343,7 @@ body {
 }
 
 .hero-copy {
-  padding: 14px 10px 0;
+  padding: 14px 4px 0;
 }
 
 .eyebrow,
