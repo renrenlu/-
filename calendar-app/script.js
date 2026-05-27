@@ -336,7 +336,7 @@ function renderCalendar() {
     button.setAttribute("role", "gridcell");
     button.setAttribute("aria-label", `${formatDateTitle(date)}，${note}`);
     button.addEventListener("click", () => {
-      selectDate(date, { revealDetail: true });
+      selectDate(date, { revealDetail: scheduleCount > 0 });
     });
 
     const badge = holiday
