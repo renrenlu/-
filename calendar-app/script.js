@@ -116,7 +116,6 @@ const dom = {
   heroDateText: document.querySelector("#heroDateText"),
   heroLunarText: document.querySelector("#heroLunarText"),
   heroMeta: document.querySelector("#heroMeta"),
-  heroTags: document.querySelector("#heroTags"),
   quoteText: document.querySelector("#quoteText"),
   quoteSource: document.querySelector("#quoteSource"),
   installAppButton: document.querySelector("#installAppButton"),
@@ -138,6 +137,7 @@ const dom = {
   selectedYi: document.querySelector("#selectedYi"),
   selectedJi: document.querySelector("#selectedJi"),
   selectedAdvice: document.querySelector("#selectedAdvice"),
+  selectedSchedulePreview: document.querySelector("#selectedSchedulePreview"),
   solarPhaseBadge: document.querySelector("#solarPhaseBadge"),
   solarTermTitle: document.querySelector("#solarTermTitle"),
   solarTermDateText: document.querySelector("#solarTermDateText"),
@@ -275,21 +275,6 @@ function renderHero() {
     dom.heroMeta.appendChild(span);
   });
 
-  dom.heroTags.innerHTML = "";
-  const tags = [];
-  if (holiday) {
-    tags.push(holiday.isMakeup ? `调休上班 · ${holiday.name}` : `法定假期 · ${holiday.name}`);
-  }
-  tags.push(...festivals);
-  if (!tags.length) {
-    tags.push(currentTerm.name);
-  }
-  tags.slice(0, 4).forEach((label) => {
-    const span = document.createElement("span");
-    span.textContent = label;
-    dom.heroTags.appendChild(span);
-  });
-
   renderThemeControls();
 }
 
@@ -333,6 +318,7 @@ function renderCalendar() {
     const festivals = getFestivalNames(date, lunar);
     const solarTerm = getSolarTermForDate(date);
     const reminderCount = countRemindersOnDate(date);
+    const scheduleCount = countSchedulesOnDate(date);
     const note = solarTerm || festivals[0] || lunar.dayLabel;
 
     const button = document.createElement("button");
@@ -366,6 +352,9 @@ function renderCalendar() {
     const reminderDots = reminderCount
       ? `<div class="reminder-markers">${Array.from({ length: Math.min(reminderCount, 3) }, () => "<i></i>").join("")}</div>`
       : "";
+    const scheduleDots = scheduleCount
+      ? `<div class="schedule-markers">${Array.from({ length: Math.min(scheduleCount, 3) }, () => "<i></i>").join("")}</div>`
+      : "";
 
     button.innerHTML = `
       <div class="day-top">
@@ -375,6 +364,7 @@ function renderCalendar() {
       <div class="day-label">${lunar.monthDayText}</div>
       <div class="day-note">${note}</div>
       ${reminderDots}
+      ${scheduleDots}
     `;
     dom.calendarGrid.appendChild(button);
   }
@@ -415,6 +405,7 @@ function renderSelectedDetail() {
   adviceBits.push(yiJi.advice);
   dom.selectedAdvice.textContent = adviceBits.join("，") + "。";
   dom.scheduleDateInput.value = formatISO(date);
+  renderSelectedSchedulePreview(schedules);
 
   dom.selectedTags.innerHTML = "";
   const tagLabels = [];
@@ -564,7 +555,6 @@ function renderLeavePlanner() {
       <strong>${item.name}</strong>
       <div class="summary">${item.summary}</div>
       <p>${item.rangeText}</p>
-      <p>${item.tip}</p>
     `;
     dom.leavePlannerList.appendChild(card);
   });
@@ -840,62 +830,16 @@ function getLeaveSuggestions(year) {
 function buildLeaveSuggestion(plan) {
   const start = parseISODate(plan.start);
   const end = parseISODate(plan.end);
-  let best = null;
-
-  for (let leaveBefore = 0; leaveBefore <= 4; leaveBefore += 1) {
-    for (let leaveAfter = 0; leaveAfter + leaveBefore <= 4; leaveAfter += 1) {
-      const leaveDays = leaveBefore + leaveAfter;
-      if (!isTakeableWorkBlock(start, -1, leaveBefore, plan) || !isTakeableWorkBlock(end, 1, leaveAfter, plan)) {
-        continue;
-      }
-      const startWithLeave = addDays(start, -leaveBefore);
-      const endWithLeave = addDays(end, leaveAfter);
-      const continuousStart = extendWhileOff(startWithLeave, -1);
-      const continuousEnd = extendWhileOff(endWithLeave, 1);
-      const totalDays = daysBetween(continuousStart, continuousEnd) + 1;
-      const candidate = {
-        name: plan.name,
-        leaveDays,
-        totalDays,
-        summary: leaveDays ? `请 ${leaveDays} 天休 ${totalDays} 天` : `原生连休 ${totalDays} 天`,
-        rangeText: `${formatMonthDay(continuousStart)} - ${formatMonthDay(continuousEnd)}`,
-        tip: leaveDays ? buildLeaveTip(start, end, leaveBefore, leaveAfter) : "这段已经是自然连休，不用额外请假。"
-      };
-
-      if (!best || candidate.totalDays > best.totalDays || (candidate.totalDays === best.totalDays && candidate.leaveDays < best.leaveDays)) {
-        best = candidate;
-      }
-    }
+  if (!start || !end) {
+    return null;
   }
 
-  return best;
-}
-
-function isTakeableWorkBlock(anchorDate, direction, count) {
-  for (let step = 1; step <= count; step += 1) {
-    const date = addDays(anchorDate, step * direction);
-    if (isOffDay(date)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function extendWhileOff(date, direction) {
-  let cursor = date;
-  while (isOffDay(addDays(cursor, direction))) {
-    cursor = addDays(cursor, direction);
-  }
-  return cursor;
-}
-
-function isOffDay(date) {
-  const holiday = getHolidayInfo(date);
-  if (holiday) {
-    return !holiday.isMakeup;
-  }
-  const day = date.getDay();
-  return day === 0 || day === 6;
+  const officialDays = daysBetween(start, end) + 1;
+  return {
+    name: plan.name,
+    summary: `法定休假 ${officialDays} 天`,
+    rangeText: `${formatMonthDay(start)} - ${formatMonthDay(end)}`
+  };
 }
 
 function getCurrentSolarTerm(date) {
@@ -1059,9 +1003,41 @@ function countRemindersOnDate(date) {
   return getRemindersForDate(date).length;
 }
 
+function countSchedulesOnDate(date) {
+  return getSchedulesForDate(date).length;
+}
+
 function getSchedulesForDate(date) {
   const iso = formatISO(date);
   return state.schedules.filter((item) => item.date === iso).sort(compareSchedules);
+}
+
+function renderSelectedSchedulePreview(schedules) {
+  if (!dom.selectedSchedulePreview) {
+    return;
+  }
+
+  if (!schedules.length) {
+    dom.selectedSchedulePreview.innerHTML = "";
+    return;
+  }
+
+  const items = schedules
+    .slice(0, 3)
+    .map(
+      (item) => `
+        <div class="selected-schedule-item${item.done ? " is-done" : ""}">
+          <strong>${item.title}</strong>
+          <p>${item.time || "全天"}${item.note ? ` · ${item.note}` : ""}</p>
+        </div>
+      `
+    )
+    .join("");
+
+  dom.selectedSchedulePreview.innerHTML = `
+    <div class="selected-schedule-head">当日日程</div>
+    <div class="selected-schedule-list">${items}</div>
+  `;
 }
 
 function compareSchedules(left, right) {
@@ -1266,17 +1242,6 @@ function hexToRgb(hex) {
 
 function rgbToHex(red, green, blue) {
   return `#${[red, green, blue].map((item) => item.toString(16).padStart(2, "0")).join("")}`;
-}
-
-function buildLeaveTip(start, end, leaveBefore, leaveAfter) {
-  const parts = [];
-  if (leaveBefore) {
-    parts.push(`${formatMonthDay(addDays(start, -leaveBefore))} 到 ${formatMonthDay(addDays(start, -1))}`);
-  }
-  if (leaveAfter) {
-    parts.push(`${formatMonthDay(addDays(end, 1))} 到 ${formatMonthDay(addDays(end, leaveAfter))}`);
-  }
-  return `建议把 ${parts.join("，以及 ")} 作为请假位。`;
 }
 
 function isLunarNewYearsEve(lunar, date) {
