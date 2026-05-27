@@ -225,6 +225,11 @@ h3 {
   padding: 56px 0;
 }
 
+.intro,
+.stat {
+  display: none !important;
+}
+
 .section-head {
   max-width: 760px;
   margin-bottom: 26px;
