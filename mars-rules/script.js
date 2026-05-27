@@ -453,6 +453,8 @@ const modalPageCaption = document.querySelector("#modalPageCaption");
 const modalPdfLink = document.querySelector("#modalPdfLink");
 let activePdfPageUrl = "../mars-exploration-rules.pdf#view=FitH";
 
+document.querySelectorAll(".intro, .stat").forEach((element) => element.remove());
+
 const scoreTables = {
   "task-1": [["比赛结束时，螺旋桨与支架没有任何接触", "15", "15"]],
   "task-2": [
