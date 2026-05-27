@@ -143,6 +143,7 @@ const dom = {
   solarTermDateText: document.querySelector("#solarTermDateText"),
   solarTermDescription: document.querySelector("#solarTermDescription"),
   solarMetaList: document.querySelector("#solarMetaList"),
+  planCountText: document.querySelector("#planCountText"),
   reminderForm: document.querySelector("#reminderForm"),
   reminderTitleInput: document.querySelector("#reminderTitleInput"),
   reminderDateInput: document.querySelector("#reminderDateInput"),
@@ -437,7 +438,10 @@ function renderReminders() {
   const allReminders = [...state.reminders].sort((left, right) => left.date.localeCompare(right.date));
   const selectedReminders = getRemindersForDate(state.selectedDate);
 
-  dom.reminderCountText.textContent = `${allReminders.length} 条`;
+  renderPlanCount();
+  dom.reminderCountText.textContent = selectedReminders.length
+    ? `当天 ${selectedReminders.length} 条 / 全部 ${allReminders.length} 条`
+    : `全部 ${allReminders.length} 条`;
   dom.reminderList.innerHTML = "";
 
   if (!allReminders.length) {
@@ -477,6 +481,7 @@ function renderSchedules() {
     .sort(compareSchedules)
     .slice(0, 4);
 
+  renderPlanCount();
   dom.scheduleCountText.textContent = selectedSchedules.length
     ? `当天 ${selectedSchedules.length} 项 / 全部 ${state.schedules.length} 项`
     : `全部 ${state.schedules.length} 项`;
@@ -530,6 +535,18 @@ function renderSchedules() {
 
     dom.scheduleList.appendChild(wrapper);
   });
+}
+
+function renderPlanCount() {
+  if (!dom.planCountText) {
+    return;
+  }
+
+  const selectedCount = getRemindersForDate(state.selectedDate).length + getSchedulesForDate(state.selectedDate).length;
+  const totalCount = state.reminders.length + state.schedules.length;
+  dom.planCountText.textContent = selectedCount
+    ? `当天 ${selectedCount} 条 / 全部 ${totalCount} 条`
+    : `全部 ${totalCount} 条`;
 }
 
 function renderLeavePlanner() {
