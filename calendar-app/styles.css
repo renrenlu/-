@@ -915,6 +915,38 @@ h3 {
   scroll-margin-top: 14px;
 }
 
+.plan-card {
+  display: grid;
+  gap: 18px;
+}
+
+.plan-section {
+  display: grid;
+  gap: 12px;
+}
+
+.plan-section + .plan-section {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.plan-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.plan-section-head strong {
+  font-size: 15px;
+}
+
+.plan-section-head span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .reminder-form,
 .stack-form,
 .schedule-form {

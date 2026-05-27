@@ -150,36 +150,41 @@
                 <div class="mini-list" id="solarMetaList"></div>
               </article>
 
-              <article class="detail-card reminder-card">
+              <article class="detail-card plan-card">
                 <div class="card-head">
-                  <p class="panel-label">提醒与安排</p>
-                  <span id="reminderCountText">0 条</span>
+                  <p class="panel-label">提醒与日程</p>
+                  <span id="planCountText">当天 0 条</span>
                 </div>
-                <form class="reminder-form" id="reminderForm">
-                  <input id="reminderTitleInput" name="title" type="text" maxlength="24" placeholder="添加提醒，例如：交房租" required />
-                  <div class="reminder-row">
-                    <input id="reminderDateInput" name="date" type="date" required />
-                    <button type="submit" class="button primary small">添加</button>
+                <div class="plan-section">
+                  <div class="plan-section-head">
+                    <strong>提醒</strong>
+                    <span id="reminderCountText">0 条</span>
                   </div>
-                </form>
-                <div class="reminder-list" id="reminderList"></div>
-              </article>
-
-              <article class="detail-card schedule-card">
-                <div class="card-head">
-                  <p class="panel-label">个人日程</p>
-                  <span id="scheduleCountText">0 项</span>
+                  <form class="reminder-form" id="reminderForm">
+                    <input id="reminderTitleInput" name="title" type="text" maxlength="24" placeholder="添加提醒，例如：交房租" required />
+                    <div class="reminder-row">
+                      <input id="reminderDateInput" name="date" type="date" required />
+                      <button type="submit" class="button primary small">添加</button>
+                    </div>
+                  </form>
+                  <div class="reminder-list" id="reminderList"></div>
                 </div>
-                <form class="schedule-form" id="scheduleForm">
-                  <input id="scheduleTitleInput" name="title" type="text" maxlength="28" placeholder="添加日程，例如：体检 / 开会 / 接孩子" required />
-                  <div class="schedule-grid">
-                    <input id="scheduleDateInput" name="date" type="date" required />
-                    <input id="scheduleTimeInput" name="time" type="time" />
+                <div class="plan-section">
+                  <div class="plan-section-head">
+                    <strong>日程</strong>
+                    <span id="scheduleCountText">0 项</span>
                   </div>
-                  <textarea id="scheduleNoteInput" name="note" rows="3" maxlength="80" placeholder="备注（可选）"></textarea>
-                  <button type="submit" class="button primary small">保存日程</button>
-                </form>
-                <div class="schedule-list" id="scheduleList"></div>
+                  <form class="schedule-form" id="scheduleForm">
+                    <input id="scheduleTitleInput" name="title" type="text" maxlength="28" placeholder="添加日程，例如：体检 / 开会 / 接孩子" required />
+                    <div class="schedule-grid">
+                      <input id="scheduleDateInput" name="date" type="date" required />
+                      <input id="scheduleTimeInput" name="time" type="time" />
+                    </div>
+                    <textarea id="scheduleNoteInput" name="note" rows="3" maxlength="80" placeholder="备注（可选）"></textarea>
+                    <button type="submit" class="button primary small">保存日程</button>
+                  </form>
+                  <div class="schedule-list" id="scheduleList"></div>
+                </div>
               </article>
             </aside>
           </div>
