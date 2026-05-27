@@ -1,4 +1,4 @@
-const CACHE_NAME = "jiexu-calendar-v2";
+const CACHE_NAME = "jiexu-calendar-v3";
 const APP_ASSETS = [
   "./",
   "./index.html",
