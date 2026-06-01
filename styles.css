@@ -13,19 +13,19 @@
   --line-strong: rgba(91, 78, 88, 0.2);
 
   /* Brand palette */
-  --accent: #dd7fa8;
-  --accent-deep: #b95686;
-  --accent-soft: #f6dce7;
-  --accent-soft-2: #f9e8ef;
-  --accent-dark: #5f5560;
-  --mint: #96b7ae;
-  --gold: #cbb39a;
-  --hero-start: #85485f;
-  --hero-mid: #b35d82;
-  --hero-end: #e17aa8;
-  --glow-1: #f9e3ed;
-  --glow-2: #e7e4e9;
-  --glow-3: #ffeaf4;
+  --accent: #ea5b96;
+  --accent-deep: #ee7caf;
+  --accent-soft: #f7b2cf;
+  --accent-soft-2: #ffe1ee;
+  --accent-dark: #b3346d;
+  --mint: #f0a8c5;
+  --gold: #ffc0d7;
+  --hero-start: #e55497;
+  --hero-mid: #eb5b9c;
+  --hero-end: #f06aa6;
+  --glow-1: #ffdfed;
+  --glow-2: #f5d6e3;
+  --glow-3: #f7c4da;
   --button-start: #ff91c0;
   --button-end: #f774ad;
   --button-shadow: rgba(244, 106, 165, 0.28);
