@@ -115,7 +115,7 @@
                   <span class="date-pill" id="selectedDatePill">今天</span>
                 </div>
                 <h3 id="selectedDateTitle">5 月 25 日 星期一</h3>
-                <p class="detail-subtitle" id="selectedLunarText">农历四月初九 · 丙午年</p>
+                <p class="detail-subtitle" id="selectedLunarText">农历四月初九</p>
                 <div class="tag-group" id="selectedTags"></div>
                 <div class="selected-schedule-preview" id="selectedSchedulePreview"></div>
                 <div class="today-grid">
@@ -195,11 +195,16 @@
         <section class="tools-section" id="toolsSection">
           <div class="section-heading">
             <p class="eyebrow">Tools</p>
-            <h2>日期计算、拼假和倒计时，随手就能用</h2>
+            <h2>常用工具</h2>
+            <div class="tool-shortcuts" aria-label="常用工具入口">
+              <button type="button" data-tool-jump="dateDiffTool">算天数</button>
+              <button type="button" data-tool-jump="leavePlannerTool">看假期</button>
+              <button type="button" data-tool-jump="countdownTool">看倒计时</button>
+            </div>
           </div>
 
           <div class="tool-grid">
-            <article class="tool-card">
+            <article class="tool-card" id="dateDiffTool">
               <div class="card-head">
                 <p class="panel-label">日期计算</p>
                 <span>相差天数 / 推算未来日期</span>
@@ -218,15 +223,15 @@
               <div class="tool-result" id="dateDiffResult"></div>
             </article>
 
-            <article class="tool-card">
+            <article class="tool-card" id="leavePlannerTool">
               <div class="card-head">
-                <p class="panel-label">拼假助手</p>
-                <span>优先展示 2025-2026 官方节假日安排</span>
+                <p class="panel-label">假期安排</p>
+                <span>2025-2026 官方节假日</span>
               </div>
               <div class="planner-list" id="leavePlannerList"></div>
             </article>
 
-            <article class="tool-card">
+            <article class="tool-card" id="countdownTool">
               <div class="card-head">
                 <p class="panel-label">倒计时</p>
                 <span>常用节点和下一个节气都放这里</span>

@@ -577,8 +577,22 @@ h3 {
   margin-bottom: 24px;
 }
 
-.section-heading p:last-child {
-  color: var(--muted);
+.tool-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.tool-shortcuts button {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  color: #fffafb;
+  font-size: 13px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--button-start), var(--button-end));
+  box-shadow: 0 12px 24px var(--button-shadow);
 }
 
 .calendar-layout {
@@ -598,6 +612,15 @@ h3 {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+.calendar-toolbar h3,
+.solar-card h3 {
+  color: var(--accent-dark);
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: 0;
 }
 
 .toolbar-actions {
@@ -1530,7 +1553,7 @@ h2 {
 
 .calendar-toolbar h3 {
   margin-bottom: 0;
-  font-size: var(--title-card-size);
+  font-size: 32px;
 }
 
 .toolbar-actions {
