@@ -122,6 +122,7 @@ const dom = {
   installHintText: document.querySelector("#installHintText"),
   themeNameText: document.querySelector("#themeNameText"),
   themePresetList: document.querySelector("#themePresetList"),
+  toolShortcuts: [...document.querySelectorAll("[data-tool-jump]")],
   dockItems: [...document.querySelectorAll("[data-dock-target]")],
   quickStrip: document.querySelector("#quickStrip"),
   calendarTitle: document.querySelector("#calendarTitle"),
@@ -198,6 +199,7 @@ async function init() {
   bindThemeControls();
   bindInstallPrompt();
   bindDockNavigation();
+  bindToolShortcuts();
   registerServiceWorker();
 
   renderAll();
@@ -261,7 +263,7 @@ function renderHero() {
   const quote = philosophyQuotes[dayOfYear(today) % philosophyQuotes.length];
 
   dom.heroDateText.textContent = `${today.getFullYear()}.${pad(today.getMonth() + 1)}.${pad(today.getDate())}`;
-  dom.heroLunarText.textContent = `农历${lunar.monthLabel}${lunar.dayLabel} · ${lunar.yearName}年`;
+  dom.heroLunarText.textContent = `农历${lunar.monthLabel}${lunar.dayLabel}`;
   dom.quoteText.textContent = quote.text;
   dom.quoteSource.textContent = quote.source;
 
@@ -380,7 +382,7 @@ function renderSelectedDetail() {
 
   dom.selectedDatePill.textContent = sameDate(date, today) ? "今天" : daysBetween(today, date) > 0 ? `还有 ${daysBetween(today, date)} 天` : `${Math.abs(daysBetween(today, date))} 天前`;
   dom.selectedDateTitle.textContent = formatDateTitle(date);
-  dom.selectedLunarText.textContent = `农历${lunar.monthLabel}${lunar.dayLabel} · ${lunar.yearName}年`;
+  dom.selectedLunarText.textContent = `农历${lunar.monthLabel}${lunar.dayLabel}`;
   dom.selectedZodiac.textContent = zodiac;
   dom.selectedStarSign.textContent = starSign;
   dom.selectedYi.textContent = yiJi.yi.join("、");
@@ -704,18 +706,12 @@ function shiftMonth(offset) {
 }
 
 function getQuickStats() {
-  const lunar = getLunarInfo(today);
   const nextOfficialHoliday = getNextOfficialHoliday(today);
   const nextSolarTerm = getNextSolarTerm(today);
   const reminderCount = state.reminders.filter((item) => daysBetween(today, parseISODate(item.date)) >= 0).length;
   const todaySchedules = getSchedulesForDate(today).length;
 
   return [
-    {
-      value: `${lunar.yearName}年`,
-      title: "今日农历",
-      note: `${lunar.monthLabel}${lunar.dayLabel} · 属${getZodiac(lunar.relatedYear)}`
-    },
     {
       value: nextOfficialHoliday ? `${daysBetween(today, parseISODate(nextOfficialHoliday.start))} 天` : "已载入",
       title: "距离下个法定假期",
@@ -1197,6 +1193,15 @@ function bindDockNavigation() {
   );
 
   sections.forEach((section) => observer.observe(section));
+}
+
+function bindToolShortcuts() {
+  dom.toolShortcuts.forEach((button) => {
+    button.addEventListener("click", () => {
+      const target = document.querySelector(`#${button.dataset.toolJump}`);
+      target?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+    });
+  });
 }
 
 function setActiveDock(targetId) {
