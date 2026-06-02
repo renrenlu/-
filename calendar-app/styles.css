@@ -958,13 +958,15 @@ h3 {
 }
 
 .schedule-toggle {
-  width: 42px;
+  width: 32px;
+  min-height: 32px;
   padding: 0;
+  border-radius: 12px;
   color: #fffafb;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 800;
   background: linear-gradient(135deg, var(--button-start), var(--button-end));
-  box-shadow: 0 10px 20px rgba(244, 106, 165, 0.2);
+  box-shadow: 0 8px 16px rgba(244, 106, 165, 0.18);
 }
 
 .schedule-copy {
@@ -1683,7 +1685,7 @@ h2 {
 }
 
 .schedule-item {
-  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-columns: 32px minmax(0, 1fr);
 }
 
 .schedule-remove {
