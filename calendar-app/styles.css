@@ -117,7 +117,6 @@ textarea {
 }
 
 .hero,
-.quick-strip,
 .calendar-section,
 .tools-section,
 .notes-section,
@@ -354,7 +353,6 @@ h3 {
 .tag-group,
 .mini-list,
 .legend,
-.quick-strip,
 .today-grid,
 .countdown-list {
   display: flex;
@@ -507,67 +505,6 @@ h3 {
   inset: -5px;
   border: 2px solid var(--accent-deep);
   border-radius: 50%;
-}
-
-.quick-strip {
-  padding: 26px 0 14px;
-  align-items: stretch;
-}
-
-.quick-card {
-  position: relative;
-  flex: 1 1 220px;
-  min-height: 132px;
-  padding: 18px 20px;
-  border: 1px solid rgba(255, 255, 255, 0.48);
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 247, 250, 0.86));
-  box-shadow: var(--shadow-soft);
-  overflow: hidden;
-}
-
-.quick-card::after {
-  content: "";
-  position: absolute;
-  right: -10px;
-  bottom: -24px;
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(246, 220, 231, 0.68), transparent 72%);
-}
-
-.quick-card:nth-child(2n) {
-  transform: translateY(6px);
-}
-
-.quick-card:nth-child(3n) {
-  transform: translateY(-4px);
-}
-
-.quick-card strong {
-  position: relative;
-  z-index: 1;
-  display: block;
-  margin-bottom: 8px;
-  color: var(--accent-dark);
-  font-size: 32px;
-  font-weight: 300;
-}
-
-.quick-card p {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 6px;
-  font-weight: 700;
-}
-
-.quick-card span {
-  position: relative;
-  z-index: 1;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.7;
 }
 
 .calendar-section,
@@ -1364,17 +1301,13 @@ h3 {
   .tool-card:nth-child(3),
   .planner-item,
   .planner-item:nth-child(2n),
-  .planner-item:nth-child(2n + 1),
-  .quick-card,
-  .quick-card:nth-child(2n),
-  .quick-card:nth-child(3n) {
+  .planner-item:nth-child(2n + 1) {
     transform: none;
   }
 }
 
 @media (max-width: 760px) {
   .hero,
-  .quick-strip,
   .calendar-section,
   .tools-section,
   .notes-section,
@@ -1460,7 +1393,6 @@ body {
 }
 
 .hero,
-.quick-strip,
 .calendar-section,
 .tools-section,
 .notes-section,
@@ -1574,7 +1506,6 @@ h2 {
 }
 
 .hero-meta::-webkit-scrollbar,
-.quick-strip::-webkit-scrollbar,
 .tool-grid::-webkit-scrollbar,
 .notes-section::-webkit-scrollbar,
 .planner-list::-webkit-scrollbar {
@@ -1613,28 +1544,6 @@ h2 {
 .theme-swatch {
   width: 36px;
   height: 36px;
-}
-
-.quick-strip {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 78%;
-  gap: 12px;
-  overflow-x: auto;
-  padding: 8px 2px 12px;
-  scroll-snap-type: x proximity;
-}
-
-.quick-card {
-  min-height: 112px;
-  padding: 16px;
-  border-radius: 24px;
-  scroll-snap-align: start;
-  transform: none !important;
-}
-
-.quick-card strong {
-  font-size: 28px;
 }
 
 .calendar-section,
@@ -1854,7 +1763,6 @@ h2 {
   }
 
   .hero,
-  .quick-strip,
   .calendar-section,
   .tools-section,
   .notes-section,
@@ -1891,12 +1799,6 @@ h2 {
 
   .hero-actions {
     display: flex;
-  }
-
-  .quick-strip {
-    grid-auto-flow: initial;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    overflow: visible;
   }
 
   .calendar-layout {
