@@ -248,6 +248,22 @@
         <a href="#top">回到顶部</a>
       </footer>
 
+      <div class="schedule-modal" id="scheduleModal" hidden>
+        <button type="button" class="schedule-modal-backdrop" id="scheduleModalBackdrop" aria-label="关闭日程详情"></button>
+        <section class="schedule-modal-panel" role="dialog" aria-modal="true" aria-labelledby="scheduleModalTitle">
+          <div class="schedule-modal-handle" aria-hidden="true"></div>
+          <div class="schedule-modal-head">
+            <div>
+              <p class="panel-label">当日日程</p>
+              <h3 id="scheduleModalTitle">5 月 28 日 星期四</h3>
+              <p id="scheduleModalSubtitle">共 1 项安排</p>
+            </div>
+            <button type="button" class="schedule-modal-close" id="scheduleModalClose" aria-label="关闭">×</button>
+          </div>
+          <div class="schedule-modal-list" id="scheduleModalList"></div>
+        </section>
+      </div>
+
       <nav class="app-dock" aria-label="App 导航">
         <a class="dock-item is-active" href="#top" data-dock-target="top">
           <span>今日</span>
