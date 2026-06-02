@@ -123,7 +123,6 @@ const dom = {
   themePresetList: document.querySelector("#themePresetList"),
   toolShortcuts: [...document.querySelectorAll("[data-tool-jump]")],
   dockItems: [...document.querySelectorAll("[data-dock-target]")],
-  quickStrip: document.querySelector("#quickStrip"),
   calendarTitle: document.querySelector("#calendarTitle"),
   prevMonthButton: document.querySelector("#prevMonthButton"),
   nextMonthButton: document.querySelector("#nextMonthButton"),
@@ -275,7 +274,6 @@ function applyThemePreviewOverride() {
 
 function renderAll() {
   renderHero();
-  renderQuickStrip();
   renderCalendar();
   renderSelectedDetail();
   renderSchedules();
@@ -310,17 +308,6 @@ function renderHero() {
   });
 
   renderThemeControls();
-}
-
-function renderQuickStrip() {
-  const items = getQuickStats();
-  dom.quickStrip.innerHTML = "";
-  items.forEach((item) => {
-    const card = document.createElement("article");
-    card.className = "quick-card";
-    card.innerHTML = `<strong>${item.value}</strong><p>${item.title}</p><span>${item.note}</span>`;
-    dom.quickStrip.appendChild(card);
-  });
 }
 
 function renderCalendar() {
@@ -661,30 +648,6 @@ function shiftMonth(offset) {
   renderSchedules();
   renderLeavePlanner();
   void persistCalendarView();
-}
-
-function getQuickStats() {
-  const nextOfficialHoliday = getNextOfficialHoliday(today);
-  const nextSolarTerm = getNextSolarTerm(today);
-  const todaySchedules = getSchedulesForDate(today).length;
-
-  return [
-    {
-      value: nextOfficialHoliday ? `${daysBetween(today, parseISODate(nextOfficialHoliday.start))} 天` : "已载入",
-      title: "距离下个法定假期",
-      note: nextOfficialHoliday ? `${nextOfficialHoliday.name}从 ${nextOfficialHoliday.start} 开始` : "当前年份暂无官方节假日数据"
-    },
-    {
-      value: `${daysBetween(today, nextSolarTerm.date)} 天`,
-      title: "距离下个节气",
-      note: `${nextSolarTerm.name} · ${formatMonthDay(nextSolarTerm.date)}`
-    },
-    {
-      value: `${todaySchedules} 项`,
-      title: "今日安排",
-      note: todaySchedules ? "今天的个人安排已经排进日历里了" : "安排会长期保存在你的设备里"
-    }
-  ];
 }
 
 function getCountdownItems() {
