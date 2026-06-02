@@ -194,6 +194,10 @@
               </div>
               <form id="dateDiffForm" class="stack-form">
                 <label>
+                  <span>计算名称（可选）</span>
+                  <input id="diffTitleInput" type="text" maxlength="24" placeholder="例如：距离考试 / 恋爱天数" />
+                </label>
+                <label>
                   <span>开始日期</span>
                   <input id="diffStartInput" type="date" required />
                 </label>
@@ -217,8 +221,19 @@
             <article class="tool-card" id="countdownTool">
               <div class="card-head">
                 <p class="panel-label">倒计时</p>
-                <span>常用节点和下一个节气都放这里</span>
+                <span>常用节点和你的目标日都放这里</span>
               </div>
+              <form id="countdownForm" class="stack-form countdown-form">
+                <label>
+                  <span>目标名称</span>
+                  <input id="countdownTitleInput" type="text" maxlength="24" placeholder="例如：考试 / 旅行 / 生日" required />
+                </label>
+                <label>
+                  <span>目标日期</span>
+                  <input id="countdownDateInput" type="date" required />
+                </label>
+                <button type="submit" class="button primary">添加倒计时</button>
+              </form>
               <div class="countdown-list" id="countdownList"></div>
             </article>
           </div>

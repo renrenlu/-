@@ -1211,14 +1211,35 @@ h3 {
   align-items: stretch;
 }
 
+.countdown-form {
+  margin-bottom: 14px;
+}
+
 .countdown-card {
   flex: 1 1 180px;
+}
+
+.countdown-card.is-custom {
+  border-color: rgba(234, 91, 150, 0.18);
+  background: linear-gradient(180deg, rgba(255, 248, 251, 0.88), rgba(255, 240, 247, 0.92));
 }
 
 .countdown-card strong {
   color: var(--accent-dark);
   font-size: 28px;
   font-weight: 300;
+}
+
+.countdown-remove {
+  min-height: 34px;
+  margin-top: 10px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: #fffafb;
+  font-size: 12px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--button-start), var(--button-end));
+  box-shadow: 0 8px 16px var(--button-shadow);
 }
 
 .note-card h3 {
