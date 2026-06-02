@@ -757,18 +757,12 @@ h3 {
   font-weight: 700;
 }
 
-.reminder-markers {
+.schedule-markers {
   display: flex;
   gap: 4px;
   margin-top: auto;
 }
 
-.schedule-markers {
-  display: flex;
-  gap: 4px;
-}
-
-.reminder-markers i,
 .dot {
   display: inline-block;
   width: 8px;
@@ -807,14 +801,9 @@ h3 {
   background: var(--gold);
 }
 
-.dot.reminder,
-.reminder-markers i {
-  background: var(--accent);
-}
-
 .dot.schedule,
 .schedule-markers i {
-  background: var(--mint);
+  background: var(--accent);
 }
 
 .detail-column {
@@ -857,7 +846,6 @@ h3 {
 .tool-result,
 .planner-item p,
 .countdown-card p,
-.reminder-item p,
 .note-card p {
   color: var(--muted);
   line-height: 1.8;
@@ -974,21 +962,18 @@ h3 {
   font-weight: 800;
 }
 
-.reminder-form,
 .stack-form,
 .schedule-form {
   display: grid;
   gap: 12px;
 }
 
-.reminder-row,
 .schedule-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
 }
 
-.reminder-list,
 .planner-list,
 .schedule-list {
   display: grid;
@@ -996,7 +981,6 @@ h3 {
   margin-top: 16px;
 }
 
-.reminder-item,
 .schedule-item,
 .planner-item,
 .countdown-card {
@@ -1013,13 +997,6 @@ h3 {
 
 .planner-item:nth-child(2n + 1) {
   transform: rotate(0.35deg);
-}
-
-.reminder-item {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
 }
 
 .schedule-item {
@@ -1230,21 +1207,11 @@ h3 {
   font-weight: 800;
 }
 
-.reminder-item strong,
 .schedule-copy strong,
 .planner-item strong,
 .countdown-card strong {
   display: block;
   margin-bottom: 6px;
-}
-
-.reminder-item button {
-  min-width: 72px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  color: #fffafb;
-  background: linear-gradient(135deg, var(--button-start), var(--button-end));
-  box-shadow: 0 10px 20px rgba(244, 106, 165, 0.2);
 }
 
 .empty-state {
@@ -1459,7 +1426,6 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .reminder-row,
   .schedule-grid {
     grid-template-columns: 1fr;
   }
@@ -1791,21 +1757,15 @@ h2 {
   font-size: 14px;
 }
 
-.reminder-row {
-  grid-template-columns: minmax(0, 1fr) 84px;
-}
-
 .schedule-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.reminder-list,
 .planner-list {
   gap: 10px;
   margin-top: 12px;
 }
 
-.reminder-item,
 .schedule-item,
 .planner-item,
 .countdown-card {

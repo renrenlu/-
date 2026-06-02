@@ -106,7 +106,6 @@ const state = {
   viewYear: today.getFullYear(),
   viewMonth: today.getMonth(),
   selectedDate: today,
-  reminders: [],
   schedules: [],
   theme: { preset: "rose" }
 };
@@ -145,11 +144,6 @@ const dom = {
   solarTermDescription: document.querySelector("#solarTermDescription"),
   solarMetaList: document.querySelector("#solarMetaList"),
   planCountText: document.querySelector("#planCountText"),
-  reminderForm: document.querySelector("#reminderForm"),
-  reminderTitleInput: document.querySelector("#reminderTitleInput"),
-  reminderDateInput: document.querySelector("#reminderDateInput"),
-  reminderCountText: document.querySelector("#reminderCountText"),
-  reminderList: document.querySelector("#reminderList"),
   scheduleForm: document.querySelector("#scheduleForm"),
   scheduleTitleInput: document.querySelector("#scheduleTitleInput"),
   scheduleDateInput: document.querySelector("#scheduleDateInput"),
@@ -181,7 +175,6 @@ async function init() {
   await hydrateUserState();
   applyThemePreviewOverride();
   applyThemeSettings(state.theme);
-  dom.reminderDateInput.value = formatISO(state.selectedDate);
   dom.scheduleDateInput.value = formatISO(state.selectedDate);
   dom.diffStartInput.value = formatISO(today);
   dom.diffEndInput.value = formatISO(addDays(today, 7));
@@ -199,7 +192,6 @@ async function init() {
   dom.nextMonthButton.addEventListener("click", () => shiftMonth(1));
   dom.installAppButton.addEventListener("click", handleInstallClick);
 
-  dom.reminderForm.addEventListener("submit", handleReminderSubmit);
   dom.scheduleForm.addEventListener("submit", handleScheduleSubmit);
   dom.dateDiffForm.addEventListener("submit", handleDateDiffSubmit);
   bindThemeControls();
@@ -226,8 +218,7 @@ async function hydrateUserState() {
     userStore.getSetting("calendar_view")
   ]);
 
-  state.reminders = reminders.sort((left, right) => left.date.localeCompare(right.date));
-  state.schedules = schedules.sort(compareSchedules);
+  state.schedules = await mergeLegacyRemindersIntoSchedules(reminders, schedules);
   state.theme = themeSetting?.value?.preset && themePresets[themeSetting.value.preset] ? themeSetting.value : { preset: "rose" };
 
   if (viewSetting?.value?.selectedDate) {
@@ -238,6 +229,40 @@ async function hydrateUserState() {
       state.viewMonth = Number(viewSetting.value.viewMonth) || restoredDate.getMonth();
     }
   }
+}
+
+async function mergeLegacyRemindersIntoSchedules(reminders, schedules) {
+  if (!reminders.length) {
+    return schedules.sort(compareSchedules);
+  }
+
+  const existingIds = new Set(schedules.map((item) => item.id));
+  const migratedSchedules = reminders
+    .filter((item) => item.title && item.date)
+    .map((item) => {
+      const baseId = item.id || `${item.date}-${item.title}`;
+      const id = baseId.startsWith("reminder-") ? baseId : `reminder-${baseId}`;
+      return {
+        id,
+        title: item.title,
+        date: item.date,
+        time: "",
+        note: item.note || "",
+        done: Boolean(item.done),
+        type: "arrangement",
+        migratedFrom: "reminder",
+        createdAt: item.createdAt || new Date().toISOString(),
+        updatedAt: item.updatedAt || item.createdAt || new Date().toISOString()
+      };
+    })
+    .filter((item) => !existingIds.has(item.id));
+
+  if (migratedSchedules.length) {
+    await Promise.all(migratedSchedules.map((item) => userStore.saveSchedule(item)));
+  }
+
+  await Promise.all(reminders.filter((item) => item.id).map((item) => userStore.deleteReminder(item.id)));
+  return [...schedules, ...migratedSchedules].sort(compareSchedules);
 }
 
 function applyThemePreviewOverride() {
@@ -253,7 +278,6 @@ function renderAll() {
   renderQuickStrip();
   renderCalendar();
   renderSelectedDetail();
-  renderReminders();
   renderSchedules();
   renderLeavePlanner();
   renderCountdowns();
@@ -327,7 +351,6 @@ function renderCalendar() {
     const holiday = getHolidayInfo(date);
     const festivals = getFestivalNames(date, lunar);
     const solarTerm = getSolarTermForDate(date);
-    const reminderCount = countRemindersOnDate(date);
     const scheduleCount = countSchedulesOnDate(date);
     const note = solarTerm || festivals[0] || lunar.dayLabel;
 
@@ -352,9 +375,6 @@ function renderCalendar() {
     const badge = holiday
       ? `<span class="day-badge ${holiday.isMakeup ? "makeup" : "holiday"}">${holiday.isMakeup ? "班" : "休"}</span>`
       : "";
-    const reminderDots = reminderCount
-      ? `<div class="reminder-markers">${Array.from({ length: Math.min(reminderCount, 3) }, () => "<i></i>").join("")}</div>`
-      : "";
     const scheduleDots = scheduleCount
       ? `<div class="schedule-markers">${Array.from({ length: Math.min(scheduleCount, 3) }, () => "<i></i>").join("")}</div>`
       : "";
@@ -366,7 +386,6 @@ function renderCalendar() {
       </div>
       <div class="day-label">${lunar.monthDayText}</div>
       <div class="day-note">${note}</div>
-      ${reminderDots}
       ${scheduleDots}
     `;
     dom.calendarGrid.appendChild(button);
@@ -382,7 +401,6 @@ function renderSelectedDetail() {
   const currentTerm = getCurrentSolarTerm(date);
   const nextTerm = getNextSolarTerm(date);
   const yiJi = getLightHuangLi(date);
-  const reminders = getRemindersForDate(date);
   const schedules = getSchedulesForDate(date);
   const zodiac = getZodiac(lunar.relatedYear);
   const starSign = getStarSign(date);
@@ -399,11 +417,8 @@ function renderSelectedDetail() {
   if (holiday) {
     adviceBits.push(holiday.isMakeup ? `今天是${holiday.name}调休上班日` : `今天处于${holiday.name}假期`);
   }
-  if (reminders.length) {
-    adviceBits.push(`你有 ${reminders.length} 条提醒需要照顾`);
-  }
   if (schedules.length) {
-    adviceBits.push(`还有 ${schedules.length} 项个人日程`);
+    adviceBits.push(`还有 ${schedules.length} 项个人安排`);
   }
   adviceBits.push(yiJi.advice);
   dom.selectedAdvice.textContent = adviceBits.join("，") + "。";
@@ -443,46 +458,6 @@ function renderSelectedDetail() {
   });
 }
 
-function renderReminders() {
-  const allReminders = [...state.reminders].sort((left, right) => left.date.localeCompare(right.date));
-  const selectedReminders = getRemindersForDate(state.selectedDate);
-
-  renderPlanCount();
-  dom.reminderCountText.textContent = selectedReminders.length
-    ? `当天 ${selectedReminders.length} 条 / 全部 ${allReminders.length} 条`
-    : `全部 ${allReminders.length} 条`;
-  dom.reminderList.innerHTML = "";
-
-  if (!allReminders.length) {
-    dom.reminderList.innerHTML = `<div class="empty-state">还没有提醒。可以先加一条生日、缴费日、出发日或自己的纪念日。</div>`;
-    return;
-  }
-
-  const list = selectedReminders.length ? selectedReminders : allReminders.slice(0, 4);
-  list.forEach((item) => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "reminder-item";
-    const days = daysBetween(today, parseISODate(item.date));
-    wrapper.innerHTML = `
-      <div>
-        <strong>${item.title}</strong>
-        <p>${item.date}${sameDate(parseISODate(item.date), state.selectedDate) ? " · 当天提醒" : days >= 0 ? ` · 还有 ${days} 天` : ` · 已过 ${Math.abs(days)} 天`}</p>
-      </div>
-      <button type="button" data-remove-reminder="${item.id}">删除</button>
-    `;
-    wrapper.querySelector("button").addEventListener("click", async () => {
-      await userStore.deleteReminder(item.id);
-      state.reminders = state.reminders.filter((entry) => entry.id !== item.id);
-      renderCalendar();
-      renderSelectedDetail();
-      renderReminders();
-      renderCountdowns();
-      renderDataStatus();
-    });
-    dom.reminderList.appendChild(wrapper);
-  });
-}
-
 function renderSchedules() {
   const selectedSchedules = getSchedulesForDate(state.selectedDate);
   const upcomingSchedules = [...state.schedules]
@@ -497,7 +472,7 @@ function renderSchedules() {
   dom.scheduleList.innerHTML = "";
 
   if (!state.schedules.length) {
-    dom.scheduleList.innerHTML = `<div class="empty-state">还没有个人日程。可以先记一条会议、出发、体检或家人安排。</div>`;
+    dom.scheduleList.innerHTML = `<div class="empty-state">还没有安排。可以先记一条缴费、会议、体检或家人事项。</div>`;
     return;
   }
 
@@ -529,6 +504,7 @@ function renderSchedules() {
       state.schedules = [...state.schedules].sort(compareSchedules);
       renderSelectedDetail();
       renderSchedules();
+      renderCalendar();
       renderCountdowns();
       renderDataStatus();
     });
@@ -538,6 +514,7 @@ function renderSchedules() {
       state.schedules = state.schedules.filter((entry) => entry.id !== item.id);
       renderSelectedDetail();
       renderSchedules();
+      renderCalendar();
       renderCountdowns();
       renderDataStatus();
     });
@@ -551,8 +528,8 @@ function renderPlanCount() {
     return;
   }
 
-  const selectedCount = getRemindersForDate(state.selectedDate).length + getSchedulesForDate(state.selectedDate).length;
-  const totalCount = state.reminders.length + state.schedules.length;
+  const selectedCount = getSchedulesForDate(state.selectedDate).length;
+  const totalCount = state.schedules.length;
   dom.planCountText.textContent = selectedCount
     ? `当天 ${selectedCount} 条 / 全部 ${totalCount} 条`
     : `全部 ${totalCount} 条`;
@@ -590,32 +567,6 @@ function renderCountdowns() {
   });
 }
 
-async function handleReminderSubmit(event) {
-  event.preventDefault();
-  const title = dom.reminderTitleInput.value.trim();
-  const date = dom.reminderDateInput.value;
-  if (!title || !date) {
-    return;
-  }
-
-  const reminder = {
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    title,
-    date,
-    createdAt: new Date().toISOString()
-  };
-  await userStore.saveReminder(reminder);
-  state.reminders.push(reminder);
-  state.reminders.sort((left, right) => left.date.localeCompare(right.date));
-  dom.reminderForm.reset();
-  dom.reminderDateInput.value = formatISO(state.selectedDate);
-  renderCalendar();
-  renderSelectedDetail();
-  renderReminders();
-  renderCountdowns();
-  renderDataStatus();
-}
-
 async function handleScheduleSubmit(event) {
   event.preventDefault();
   const title = dom.scheduleTitleInput.value.trim();
@@ -633,6 +584,7 @@ async function handleScheduleSubmit(event) {
     time,
     note,
     done: false,
+    type: "arrangement",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
@@ -706,7 +658,6 @@ function shiftMonth(offset) {
   state.selectedDate = startOfDay(next);
   renderCalendar();
   renderSelectedDetail();
-  renderReminders();
   renderSchedules();
   renderLeavePlanner();
   void persistCalendarView();
@@ -715,7 +666,6 @@ function shiftMonth(offset) {
 function getQuickStats() {
   const nextOfficialHoliday = getNextOfficialHoliday(today);
   const nextSolarTerm = getNextSolarTerm(today);
-  const reminderCount = state.reminders.filter((item) => daysBetween(today, parseISODate(item.date)) >= 0).length;
   const todaySchedules = getSchedulesForDate(today).length;
 
   return [
@@ -731,8 +681,8 @@ function getQuickStats() {
     },
     {
       value: `${todaySchedules} 项`,
-      title: "今日日程",
-      note: todaySchedules ? "今天的个人安排已经排进日历里了" : reminderCount ? `还有 ${reminderCount} 条提醒待处理` : "提醒和日程会长期保存在你的设备里"
+      title: "今日安排",
+      note: todaySchedules ? "今天的个人安排已经排进日历里了" : "安排会长期保存在你的设备里"
     }
   ];
 }
@@ -755,23 +705,12 @@ function getCountdownItems() {
     });
   }
 
-  const reminder = [...state.reminders]
-    .filter((item) => daysBetween(today, parseISODate(item.date)) >= 0)
-    .sort((left, right) => left.date.localeCompare(right.date))[0];
-  if (reminder) {
-    items.push({
-      title: `最近提醒 · ${reminder.title}`,
-      days: `${daysBetween(today, parseISODate(reminder.date))} 天`,
-      note: reminder.date
-    });
-  }
-
   const schedule = [...state.schedules]
     .filter((item) => !item.done && daysBetween(today, parseISODate(item.date)) >= 0)
     .sort(compareSchedules)[0];
   if (schedule) {
     items.push({
-      title: `最近日程 · ${schedule.title}`,
+      title: `最近安排 · ${schedule.title}`,
       days: `${daysBetween(today, parseISODate(schedule.date))} 天`,
       note: `${schedule.date}${schedule.time ? ` ${schedule.time}` : ""}`
     });
@@ -1011,15 +950,6 @@ function getWeekOfYear(date) {
   return Math.ceil((diff + normalizeWeekday(start.getDay()) + 1) / 7);
 }
 
-function getRemindersForDate(date) {
-  const iso = formatISO(date);
-  return state.reminders.filter((item) => item.date === iso);
-}
-
-function countRemindersOnDate(date) {
-  return getRemindersForDate(date).length;
-}
-
 function countSchedulesOnDate(date) {
   return getSchedulesForDate(date).length;
 }
@@ -1035,7 +965,6 @@ function selectDate(date, options = {}) {
   state.viewMonth = state.selectedDate.getMonth();
   renderCalendar();
   renderSelectedDetail();
-  renderReminders();
   renderSchedules();
   if (options.openSchedule) {
     openScheduleModalForDate(state.selectedDate);
@@ -1080,7 +1009,7 @@ function renderSelectedSchedulePreview(schedules) {
     .join("");
 
   dom.selectedSchedulePreview.innerHTML = `
-    <div class="selected-schedule-head">当日日程</div>
+    <div class="selected-schedule-head">当日安排</div>
     <div class="selected-schedule-list">${items}</div>
   `;
 }
@@ -1189,7 +1118,7 @@ function renderDataStatus() {
     ? `法定假期已接入 ${sourceYears[0]} - ${sourceYears[sourceYears.length - 1]} 官方安排，节气、农历和常规节日全年可查。`
     : "当前仍可查看公历、农历、节气和常规节日。";
 
-  dom.persistenceSummaryText.textContent = `${storeLabel} · ${state.reminders.length} 条提醒 · ${state.schedules.length} 项日程 · 当前主题 ${themeLabel}${holidaySourceCount ? ` · 已载入 ${holidaySourceCount} 份官方假期通知` : ""}`;
+  dom.persistenceSummaryText.textContent = `${storeLabel} · ${state.schedules.length} 项安排 · 当前主题 ${themeLabel}${holidaySourceCount ? ` · 已载入 ${holidaySourceCount} 份官方假期通知` : ""}`;
 }
 
 async function persistCalendarView() {

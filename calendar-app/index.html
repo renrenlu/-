@@ -6,7 +6,7 @@
     <title>节序万年历</title>
     <meta
       name="description"
-      content="一款融合公历、农历、节气、法定节假日、轻量黄历、提醒、倒计时与拼假建议的万年历原型。"
+      content="一款融合公历、农历、节气、法定节假日、轻量黄历、个人安排、倒计时与拼假建议的万年历原型。"
     />
     <meta name="theme-color" content="#ea5b96" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -38,9 +38,9 @@
 
         <section class="hero-grid">
           <div class="hero-copy">
-            <p class="eyebrow">公历 / 农历 / 节气 / 节假日 / 提醒 / 拼假</p>
+            <p class="eyebrow">公历 / 农历 / 节气 / 节假日 / 安排 / 拼假</p>
             <h1>把今天<br />和接下来的日子<br />安排得清清楚楚</h1>
-            <p class="lead">公历、农历、节气、假期、提醒和个人日程，都能在这里一眼看清。</p>
+            <p class="lead">公历、农历、节气、假期和个人安排，都能在这里一眼看清。</p>
             <div class="hero-actions">
               <a class="button primary" href="#calendarSection">打开今日视图</a>
               <a class="button secondary" href="#toolsSection">查看计划工具</a>
@@ -103,8 +103,7 @@
                 <span><i class="dot holiday"></i>法定休假</span>
                 <span><i class="dot makeup"></i>调休上班</span>
                 <span><i class="dot solar"></i>节气/节日</span>
-                <span><i class="dot reminder"></i>提醒</span>
-                <span><i class="dot schedule"></i>日程</span>
+                <span><i class="dot schedule"></i>安排</span>
               </div>
             </article>
 
@@ -152,36 +151,22 @@
 
               <article class="detail-card plan-card">
                 <div class="card-head">
-                  <p class="panel-label">提醒与日程</p>
+                  <p class="panel-label">个人安排</p>
                   <span id="planCountText">当天 0 条</span>
                 </div>
                 <div class="plan-section">
                   <div class="plan-section-head">
-                    <strong>提醒</strong>
-                    <span id="reminderCountText">0 条</span>
-                  </div>
-                  <form class="reminder-form" id="reminderForm">
-                    <input id="reminderTitleInput" name="title" type="text" maxlength="24" placeholder="添加提醒，例如：交房租" required />
-                    <div class="reminder-row">
-                      <input id="reminderDateInput" name="date" type="date" required />
-                      <button type="submit" class="button primary small">添加</button>
-                    </div>
-                  </form>
-                  <div class="reminder-list" id="reminderList"></div>
-                </div>
-                <div class="plan-section">
-                  <div class="plan-section-head">
-                    <strong>日程</strong>
+                    <strong>安排</strong>
                     <span id="scheduleCountText">0 项</span>
                   </div>
                   <form class="schedule-form" id="scheduleForm">
-                    <input id="scheduleTitleInput" name="title" type="text" maxlength="28" placeholder="添加日程，例如：体检 / 开会 / 接孩子" required />
+                    <input id="scheduleTitleInput" name="title" type="text" maxlength="28" placeholder="添加安排，例如：体检 / 缴费 / 接孩子" required />
                     <div class="schedule-grid">
                       <input id="scheduleDateInput" name="date" type="date" required />
                       <input id="scheduleTimeInput" name="time" type="time" />
                     </div>
                     <textarea id="scheduleNoteInput" name="note" rows="3" maxlength="80" placeholder="备注（可选）"></textarea>
-                    <button type="submit" class="button primary small">保存日程</button>
+                    <button type="submit" class="button primary small">保存安排</button>
                   </form>
                   <div class="schedule-list" id="scheduleList"></div>
                 </div>
@@ -249,12 +234,12 @@
       </footer>
 
       <div class="schedule-modal" id="scheduleModal" hidden>
-        <button type="button" class="schedule-modal-backdrop" id="scheduleModalBackdrop" aria-label="关闭日程详情"></button>
+        <button type="button" class="schedule-modal-backdrop" id="scheduleModalBackdrop" aria-label="关闭安排详情"></button>
         <section class="schedule-modal-panel" role="dialog" aria-modal="true" aria-labelledby="scheduleModalTitle">
           <div class="schedule-modal-handle" aria-hidden="true"></div>
           <div class="schedule-modal-head">
             <div>
-              <p class="panel-label">当日日程</p>
+              <p class="panel-label">当日安排</p>
               <h3 id="scheduleModalTitle">5 月 28 日 星期四</h3>
               <p id="scheduleModalSubtitle">共 1 项安排</p>
             </div>
