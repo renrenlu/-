@@ -1,6 +1,7 @@
 const today = startOfDay(new Date());
 const reminderStorageKey = "perennial-calendar-reminders-v1";
 const themeStorageKey = "perennial-calendar-theme-v1";
+const countdownSettingKey = "custom_countdowns";
 let deferredInstallPrompt = null;
 const calendarData = window.JX_CALENDAR_DATA || {};
 const userStore = new window.JXUserStore();
@@ -107,6 +108,7 @@ const state = {
   viewMonth: today.getMonth(),
   selectedDate: today,
   schedules: [],
+  customCountdowns: [],
   theme: { preset: "rose" }
 };
 
@@ -151,10 +153,14 @@ const dom = {
   scheduleCountText: document.querySelector("#scheduleCountText"),
   scheduleList: document.querySelector("#scheduleList"),
   dateDiffForm: document.querySelector("#dateDiffForm"),
+  diffTitleInput: document.querySelector("#diffTitleInput"),
   diffStartInput: document.querySelector("#diffStartInput"),
   diffEndInput: document.querySelector("#diffEndInput"),
   dateDiffResult: document.querySelector("#dateDiffResult"),
   leavePlannerList: document.querySelector("#leavePlannerList"),
+  countdownForm: document.querySelector("#countdownForm"),
+  countdownTitleInput: document.querySelector("#countdownTitleInput"),
+  countdownDateInput: document.querySelector("#countdownDateInput"),
   countdownList: document.querySelector("#countdownList"),
   dataCoverageText: document.querySelector("#dataCoverageText"),
   persistenceSummaryText: document.querySelector("#persistenceSummaryText"),
@@ -177,6 +183,7 @@ async function init() {
   dom.scheduleDateInput.value = formatISO(state.selectedDate);
   dom.diffStartInput.value = formatISO(today);
   dom.diffEndInput.value = formatISO(addDays(today, 7));
+  dom.countdownDateInput.value = formatISO(addDays(today, 30));
 
   dom.jumpTodayButton.addEventListener("click", () => {
     state.viewYear = today.getFullYear();
@@ -193,6 +200,7 @@ async function init() {
 
   dom.scheduleForm.addEventListener("submit", handleScheduleSubmit);
   dom.dateDiffForm.addEventListener("submit", handleDateDiffSubmit);
+  dom.countdownForm.addEventListener("submit", handleCountdownSubmit);
   bindThemeControls();
   bindInstallPrompt();
   bindDockNavigation();
@@ -210,14 +218,18 @@ async function hydrateUserState() {
     themeKey: themeStorageKey
   });
 
-  const [reminders, schedules, themeSetting, viewSetting] = await Promise.all([
+  const [reminders, schedules, themeSetting, viewSetting, countdownSetting] = await Promise.all([
     userStore.listReminders(),
     userStore.listSchedules(),
     userStore.getSetting("theme"),
-    userStore.getSetting("calendar_view")
+    userStore.getSetting("calendar_view"),
+    userStore.getSetting(countdownSettingKey)
   ]);
 
   state.schedules = await mergeLegacyRemindersIntoSchedules(reminders, schedules);
+  state.customCountdowns = Array.isArray(countdownSetting?.value)
+    ? countdownSetting.value.filter((item) => item.title && item.date).sort(compareCountdowns)
+    : [];
   state.theme = themeSetting?.value?.preset && themePresets[themeSetting.value.preset] ? themeSetting.value : { preset: "rose" };
 
   if (viewSetting?.value?.selectedDate) {
@@ -548,8 +560,19 @@ function renderCountdowns() {
   dom.countdownList.innerHTML = "";
   countdowns.forEach((item) => {
     const card = document.createElement("article");
-    card.className = "countdown-card";
-    card.innerHTML = `<strong>${item.days}</strong><p>${item.title}</p><p>${item.note}</p>`;
+    card.className = `countdown-card${item.custom ? " is-custom" : ""}`;
+    card.innerHTML = `
+      <strong>${escapeHTML(item.days)}</strong>
+      <p>${escapeHTML(item.title)}</p>
+      <p>${escapeHTML(item.note)}</p>
+      ${item.custom ? `<button type="button" class="countdown-remove" data-countdown-id="${escapeHTML(item.id)}">删除</button>` : ""}
+    `;
+    card.querySelector(".countdown-remove")?.addEventListener("click", async () => {
+      state.customCountdowns = state.customCountdowns.filter((entry) => entry.id !== item.id);
+      await persistCustomCountdowns();
+      renderCountdowns();
+      renderDataStatus();
+    });
     dom.countdownList.appendChild(card);
   });
 }
@@ -593,6 +616,7 @@ async function handleScheduleSubmit(event) {
 
 function handleDateDiffSubmit(event) {
   event.preventDefault();
+  const title = dom.diffTitleInput.value.trim();
   const start = parseISODate(dom.diffStartInput.value);
   const end = parseISODate(dom.diffEndInput.value);
   if (!start || !end) {
@@ -602,13 +626,36 @@ function handleDateDiffSubmit(event) {
   const diff = daysBetween(start, end);
   const abs = Math.abs(diff);
   const direction = diff >= 0 ? "之后" : "之前";
+  const prefix = title ? `${title}：` : "";
   const result = [
-    `${formatMonthDay(end)} 在 ${formatMonthDay(start)} ${direction} ${abs} 天。`,
+    `${prefix}${formatMonthDay(end)} 在 ${formatMonthDay(start)} ${direction} ${abs} 天。`,
     diff >= 0
       ? `如果从 ${formatMonthDay(start)} 开始倒数，${formatMonthDay(end)} 会在第 ${abs + 1} 天出现。`
       : `如果反过来看，${formatMonthDay(start)} 在 ${formatMonthDay(end)} 之后 ${abs} 天。`
   ].join(" ");
   renderDateDiffResult(result);
+}
+
+async function handleCountdownSubmit(event) {
+  event.preventDefault();
+  const title = dom.countdownTitleInput.value.trim();
+  const date = dom.countdownDateInput.value;
+  if (!title || !parseISODate(date)) {
+    return;
+  }
+
+  state.customCountdowns.push({
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    title,
+    date,
+    createdAt: new Date().toISOString()
+  });
+  state.customCountdowns.sort(compareCountdowns);
+  await persistCustomCountdowns();
+  dom.countdownForm.reset();
+  dom.countdownDateInput.value = formatISO(addDays(today, 30));
+  renderCountdowns();
+  renderDataStatus();
 }
 
 async function handleInstallClick() {
@@ -652,6 +699,21 @@ function shiftMonth(offset) {
 
 function getCountdownItems() {
   const items = [];
+  state.customCountdowns.forEach((item) => {
+    const targetDate = parseISODate(item.date);
+    if (!targetDate) {
+      return;
+    }
+    const diff = daysBetween(today, targetDate);
+    items.push({
+      id: item.id,
+      custom: true,
+      title: `自定义 · ${item.title}`,
+      days: diff >= 0 ? `${diff} 天` : `已过 ${Math.abs(diff)} 天`,
+      note: `${item.date}${diff >= 0 ? " 到来" : " 已经过了"}`
+    });
+  });
+
   const nextTerm = getNextSolarTerm(today);
   items.push({
     title: `下一个节气 · ${nextTerm.name}`,
@@ -687,6 +749,14 @@ function getCountdownItems() {
   });
 
   return items;
+}
+
+async function persistCustomCountdowns() {
+  await userStore.setSetting(countdownSettingKey, state.customCountdowns);
+}
+
+function compareCountdowns(left, right) {
+  return left.date.localeCompare(right.date) || left.title.localeCompare(right.title);
 }
 
 function getFestivalNames(date, lunar) {
