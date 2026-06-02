@@ -164,7 +164,13 @@ const dom = {
   leavePlannerList: document.querySelector("#leavePlannerList"),
   countdownList: document.querySelector("#countdownList"),
   dataCoverageText: document.querySelector("#dataCoverageText"),
-  persistenceSummaryText: document.querySelector("#persistenceSummaryText")
+  persistenceSummaryText: document.querySelector("#persistenceSummaryText"),
+  scheduleModal: document.querySelector("#scheduleModal"),
+  scheduleModalBackdrop: document.querySelector("#scheduleModalBackdrop"),
+  scheduleModalClose: document.querySelector("#scheduleModalClose"),
+  scheduleModalTitle: document.querySelector("#scheduleModalTitle"),
+  scheduleModalSubtitle: document.querySelector("#scheduleModalSubtitle"),
+  scheduleModalList: document.querySelector("#scheduleModalList")
 };
 
 init().catch((error) => {
@@ -200,6 +206,7 @@ async function init() {
   bindInstallPrompt();
   bindDockNavigation();
   bindToolShortcuts();
+  bindScheduleModal();
   registerServiceWorker();
 
   renderAll();
@@ -339,7 +346,7 @@ function renderCalendar() {
     button.setAttribute("role", "gridcell");
     button.setAttribute("aria-label", `${formatDateTitle(date)}，${note}`);
     button.addEventListener("click", () => {
-      selectDate(date, { revealDetail: scheduleCount > 0 });
+      selectDate(date, { openSchedule: scheduleCount > 0 });
     });
 
     const badge = holiday
@@ -636,7 +643,7 @@ async function handleScheduleSubmit(event) {
   dom.scheduleForm.reset();
   const scheduleDate = parseISODate(schedule.date);
   if (scheduleDate) {
-    selectDate(scheduleDate, { revealDetail: true });
+    selectDate(scheduleDate, { openSchedule: true });
   } else {
     renderSelectedDetail();
     renderSchedules();
@@ -1030,6 +1037,9 @@ function selectDate(date, options = {}) {
   renderSelectedDetail();
   renderReminders();
   renderSchedules();
+  if (options.openSchedule) {
+    openScheduleModalForDate(state.selectedDate);
+  }
   if (options.revealDetail) {
     revealSelectedDetail();
   }
@@ -1073,6 +1083,71 @@ function renderSelectedSchedulePreview(schedules) {
     <div class="selected-schedule-head">当日日程</div>
     <div class="selected-schedule-list">${items}</div>
   `;
+}
+
+function bindScheduleModal() {
+  dom.scheduleModalBackdrop?.addEventListener("click", closeScheduleModal);
+  dom.scheduleModalClose?.addEventListener("click", closeScheduleModal);
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && dom.scheduleModal && !dom.scheduleModal.hidden) {
+      closeScheduleModal();
+    }
+  });
+}
+
+function openScheduleModalForDate(date) {
+  const schedules = getSchedulesForDate(date);
+  if (!schedules.length || !dom.scheduleModal) {
+    closeScheduleModal();
+    return;
+  }
+
+  dom.scheduleModalTitle.textContent = formatDateTitle(date);
+  dom.scheduleModalSubtitle.textContent = `共 ${schedules.length} 项安排`;
+  dom.scheduleModalList.innerHTML = schedules
+    .map((item) => {
+      const timeText = item.time || "全天";
+      const statusText = item.done ? "已完成" : "待办";
+      const note = item.note ? `<p>${escapeHTML(item.note)}</p>` : "";
+      return `
+        <article class="schedule-modal-item${item.done ? " is-done" : ""}">
+          <span>${escapeHTML(timeText)}</span>
+          <div>
+            <strong>${escapeHTML(item.title)}</strong>
+            ${note}
+          </div>
+          <em>${statusText}</em>
+        </article>
+      `;
+    })
+    .join("");
+
+  dom.scheduleModal.hidden = false;
+  document.body.classList.add("has-modal-open");
+  window.setTimeout(() => {
+    dom.scheduleModal.classList.add("is-open");
+  }, 10);
+}
+
+function closeScheduleModal() {
+  if (!dom.scheduleModal || dom.scheduleModal.hidden) {
+    return;
+  }
+
+  dom.scheduleModal.classList.remove("is-open");
+  document.body.classList.remove("has-modal-open");
+  window.setTimeout(() => {
+    dom.scheduleModal.hidden = true;
+  }, 180);
+}
+
+function escapeHTML(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function compareSchedules(left, right) {
