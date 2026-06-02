@@ -630,7 +630,12 @@ h3 {
 
 .day-cell.is-today {
   border-color: rgba(217, 152, 177, 0.34);
-  box-shadow: inset 0 0 0 2px rgba(217, 152, 177, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 231, 242, 0.98), rgba(255, 247, 251, 0.98)),
+    var(--surface);
+  box-shadow:
+    inset 0 0 0 2px rgba(234, 91, 150, 0.2),
+    0 16px 28px rgba(234, 91, 150, 0.12);
 }
 
 .day-cell.is-selected {
@@ -639,6 +644,13 @@ h3 {
     linear-gradient(180deg, rgba(255, 246, 250, 0.98), rgba(247, 237, 242, 0.98)),
     var(--surface);
   box-shadow: 0 20px 34px rgba(83, 69, 80, 0.12);
+}
+
+.day-cell.is-today.is-selected {
+  border-color: rgba(234, 91, 150, 0.42);
+  background:
+    linear-gradient(180deg, rgba(255, 222, 237, 0.98), rgba(255, 243, 249, 0.98)),
+    var(--surface);
 }
 
 .day-cell.is-holiday {
@@ -656,9 +668,8 @@ h3 {
 .day-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  padding-right: 26px;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .day-number {
@@ -667,15 +678,14 @@ h3 {
 }
 
 .day-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  position: static;
+  flex: 0 0 auto;
   display: inline-grid;
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   place-items: center;
   border-radius: 50%;
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 800;
   line-height: 1;
 }
@@ -966,15 +976,16 @@ h3 {
 }
 
 .schedule-toggle {
-  width: 32px;
-  min-height: 32px;
+  width: 18px;
+  min-height: 18px;
   padding: 0;
-  border-radius: 12px;
+  margin-top: 2px;
+  border-radius: 7px;
   color: #fffafb;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 800;
   background: linear-gradient(135deg, var(--button-start), var(--button-end));
-  box-shadow: 0 8px 16px rgba(244, 106, 165, 0.18);
+  box-shadow: 0 6px 12px rgba(244, 106, 165, 0.14);
 }
 
 .schedule-copy {
@@ -1652,11 +1663,9 @@ h2 {
 }
 
 .day-badge {
-  top: 8px;
-  right: 8px;
-  width: 22px;
-  height: 22px;
-  font-size: 9px;
+  width: 16px;
+  height: 16px;
+  font-size: 7px;
 }
 
 .day-label,
@@ -1717,7 +1726,7 @@ h2 {
 }
 
 .schedule-item {
-  grid-template-columns: 32px minmax(0, 1fr);
+  grid-template-columns: 20px minmax(0, 1fr);
 }
 
 .schedule-remove {
@@ -1728,12 +1737,11 @@ h2 {
 .tool-grid,
 .notes-section {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 88%;
+  grid-auto-flow: row;
+  grid-template-columns: 1fr;
   gap: 12px;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 6px;
-  scroll-snap-type: x proximity;
 }
 
 .tool-card,
