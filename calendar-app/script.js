@@ -715,7 +715,7 @@ function getCountdownItems() {
       id: item.id,
       custom: true,
       title: `自定义 · ${item.title}`,
-      days: diff >= 0 ? `${diff} 天` : `已过 ${Math.abs(diff)} 天`,
+      days: diff >= 0 ? `还有 ${diff} 天` : `已过 ${Math.abs(diff)} 天`,
       note: `${item.date}${diff >= 0 ? " 到来" : " 已经过了"}`
     });
   });
@@ -723,7 +723,7 @@ function getCountdownItems() {
   const nextTerm = getNextSolarTerm(today);
   items.push({
     title: `下一个节气 · ${nextTerm.name}`,
-    days: `${daysBetween(today, nextTerm.date)} 天`,
+    days: `还有 ${daysBetween(today, nextTerm.date)} 天`,
     note: `${formatMonthDay(nextTerm.date)} 到来`
   });
 
@@ -731,7 +731,7 @@ function getCountdownItems() {
   if (nextHoliday) {
     items.push({
       title: `下一个法定假期 · ${nextHoliday.name}`,
-      days: `${daysBetween(today, parseISODate(nextHoliday.start))} 天`,
+      days: `还有 ${daysBetween(today, parseISODate(nextHoliday.start))} 天`,
       note: `${nextHoliday.start} 开始`
     });
   }
@@ -742,7 +742,7 @@ function getCountdownItems() {
   if (schedule) {
     items.push({
       title: `最近安排 · ${schedule.title}`,
-      days: `${daysBetween(today, parseISODate(schedule.date))} 天`,
+      days: `还有 ${daysBetween(today, parseISODate(schedule.date))} 天`,
       note: `${schedule.date}${schedule.time ? ` ${schedule.time}` : ""}`
     });
   }
@@ -750,7 +750,7 @@ function getCountdownItems() {
   const yearEnd = new Date(today.getFullYear(), 11, 31);
   items.push({
     title: `${today.getFullYear()} 还剩`,
-    days: `${daysBetween(today, yearEnd)} 天`,
+    days: `还有 ${daysBetween(today, yearEnd)} 天`,
     note: "适合安排还想完成的事"
   });
 
