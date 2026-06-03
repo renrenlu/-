@@ -1799,6 +1799,64 @@ h2 {
   transform: none !important;
 }
 
+.tools-section .section-heading {
+  margin-bottom: 10px;
+}
+
+.tools-section .tool-shortcuts {
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tools-section .tool-shortcuts button {
+  min-height: 34px;
+  padding-inline: 13px;
+  font-size: 12px;
+}
+
+.tools-section .tool-card {
+  padding: 14px;
+  border-radius: 22px;
+}
+
+.tools-section .card-head {
+  gap: 8px;
+}
+
+.tools-section .stack-form {
+  gap: 8px;
+}
+
+.tools-section .stack-form label {
+  gap: 6px;
+}
+
+.tools-section .stack-form span {
+  font-size: 12px;
+}
+
+.tools-section input,
+.tools-section textarea {
+  padding: 11px 12px;
+  border-radius: 14px;
+}
+
+.tools-section textarea {
+  min-height: 72px;
+}
+
+.tools-section .button {
+  min-height: 40px;
+  border-radius: 14px;
+}
+
+.tools-section .tool-result {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 16px;
+  line-height: 1.6;
+}
+
 .notes-section {
   margin-bottom: 8px;
 }
@@ -1809,17 +1867,55 @@ h2 {
   transform: none !important;
 }
 
+.tools-section .planner-list {
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tools-section .planner-item {
+  padding: 12px;
+  border-radius: 16px;
+}
+
+.tools-section .planner-item .summary {
+  font-size: 18px;
+}
+
 .countdown-list {
   display: grid;
   gap: 10px;
+}
+
+.tools-section .countdown-form {
+  margin-bottom: 10px;
+}
+
+.tools-section .countdown-list {
+  gap: 8px;
 }
 
 .countdown-card {
   flex: unset;
 }
 
-.countdown-card strong {
-  font-size: 24px;
+.tools-section .countdown-card {
+  padding: 12px;
+  border-radius: 16px;
+}
+
+.tools-section .countdown-card strong {
+  font-size: 22px;
+}
+
+.tools-section .countdown-card p {
+  margin-bottom: 6px;
+  line-height: 1.55;
+}
+
+.tools-section .countdown-remove {
+  min-height: 30px;
+  margin-top: 6px;
+  padding: 6px 12px;
 }
 
 .footer {
