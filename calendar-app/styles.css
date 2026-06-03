@@ -29,6 +29,22 @@
   --button-start: #ff91c0;
   --button-end: #f774ad;
   --button-shadow: rgba(244, 106, 165, 0.28);
+  --calendar-border: rgba(234, 91, 150, 0.18);
+  --calendar-border-hover: rgba(234, 91, 150, 0.28);
+  --calendar-border-strong: rgba(234, 91, 150, 0.42);
+  --calendar-inset: rgba(234, 91, 150, 0.2);
+  --calendar-shadow: rgba(234, 91, 150, 0.12);
+  --calendar-selected-shadow: rgba(234, 91, 150, 0.14);
+  --calendar-today-start: rgba(255, 231, 242, 0.98);
+  --calendar-today-end: rgba(255, 247, 251, 0.98);
+  --calendar-selected-start: rgba(255, 246, 250, 0.98);
+  --calendar-selected-end: rgba(247, 237, 242, 0.98);
+  --calendar-active-start: rgba(255, 222, 237, 0.98);
+  --calendar-active-end: rgba(255, 243, 249, 0.98);
+  --calendar-holiday-start: rgba(255, 237, 244, 0.96);
+  --calendar-holiday-end: rgba(255, 251, 252, 0.94);
+  --calendar-makeup-start: rgba(237, 245, 242, 0.96);
+  --calendar-makeup-end: rgba(255, 255, 255, 0.92);
 
   /* Shared depth and radius */
   --shadow: 0 30px 70px rgba(83, 69, 80, 0.12);
@@ -619,7 +635,7 @@ h3 {
 
 .day-cell:hover {
   transform: translateY(-3px) rotate(-0.4deg);
-  border-color: rgba(217, 152, 177, 0.28);
+  border-color: var(--calendar-border-hover);
   box-shadow: 0 18px 28px rgba(83, 69, 80, 0.1);
 }
 
@@ -629,39 +645,39 @@ h3 {
 }
 
 .day-cell.is-today {
-  border-color: rgba(217, 152, 177, 0.34);
+  border-color: var(--calendar-border-strong);
   background:
-    linear-gradient(180deg, rgba(255, 231, 242, 0.98), rgba(255, 247, 251, 0.98)),
+    linear-gradient(180deg, var(--calendar-today-start), var(--calendar-today-end)),
     var(--surface);
   box-shadow:
-    inset 0 0 0 2px rgba(234, 91, 150, 0.2),
-    0 16px 28px rgba(234, 91, 150, 0.12);
+    inset 0 0 0 2px var(--calendar-inset),
+    0 16px 28px var(--calendar-shadow);
 }
 
 .day-cell.is-selected {
-  border-color: rgba(217, 152, 177, 0.18);
+  border-color: var(--calendar-border);
   background:
-    linear-gradient(180deg, rgba(255, 246, 250, 0.98), rgba(247, 237, 242, 0.98)),
+    linear-gradient(180deg, var(--calendar-selected-start), var(--calendar-selected-end)),
     var(--surface);
-  box-shadow: 0 20px 34px rgba(83, 69, 80, 0.12);
+  box-shadow: 0 20px 34px var(--calendar-selected-shadow);
 }
 
 .day-cell.is-today.is-selected {
-  border-color: rgba(234, 91, 150, 0.42);
+  border-color: var(--calendar-border-strong);
   background:
-    linear-gradient(180deg, rgba(255, 222, 237, 0.98), rgba(255, 243, 249, 0.98)),
+    linear-gradient(180deg, var(--calendar-active-start), var(--calendar-active-end)),
     var(--surface);
 }
 
 .day-cell.is-holiday {
   background:
-    linear-gradient(180deg, rgba(255, 237, 244, 0.96), rgba(255, 251, 252, 0.94)),
+    linear-gradient(180deg, var(--calendar-holiday-start), var(--calendar-holiday-end)),
     var(--surface);
 }
 
 .day-cell.is-makeup {
   background:
-    linear-gradient(180deg, rgba(237, 245, 242, 0.96), rgba(255, 255, 255, 0.92)),
+    linear-gradient(180deg, var(--calendar-makeup-start), var(--calendar-makeup-end)),
     var(--surface);
 }
 
