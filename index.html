@@ -77,35 +77,60 @@
       <main>
         <section class="calendar-section" id="calendarSection">
           <div class="calendar-layout">
-            <article class="calendar-panel">
-              <div class="calendar-toolbar">
-                <div>
-                  <p class="panel-label">月视图</p>
-                  <h3 id="calendarTitle">2026 年 5 月</h3>
+            <div class="calendar-main-column">
+              <article class="calendar-panel">
+                <div class="calendar-toolbar">
+                  <div>
+                    <p class="panel-label">月视图</p>
+                    <h3 id="calendarTitle">2026 年 5 月</h3>
+                  </div>
+                  <div class="toolbar-actions">
+                    <button type="button" class="icon-button" id="prevMonthButton" aria-label="上一个月">‹</button>
+                    <button type="button" class="icon-button" id="nextMonthButton" aria-label="下一个月">›</button>
+                  </div>
                 </div>
-                <div class="toolbar-actions">
-                  <button type="button" class="icon-button" id="prevMonthButton" aria-label="上一个月">‹</button>
-                  <button type="button" class="icon-button" id="nextMonthButton" aria-label="下一个月">›</button>
-                </div>
-              </div>
 
-              <div class="weekday-row" aria-hidden="true">
-                <span>一</span>
-                <span>二</span>
-                <span>三</span>
-                <span>四</span>
-                <span>五</span>
-                <span>六</span>
-                <span>日</span>
-              </div>
-              <div class="calendar-grid" id="calendarGrid" role="grid" aria-label="月历"></div>
-              <div class="legend">
-                <span><i class="dot holiday"></i>法定休假</span>
-                <span><i class="dot makeup"></i>调休上班</span>
-                <span><i class="dot solar"></i>节气/节日</span>
-                <span><i class="dot schedule"></i>安排</span>
-              </div>
-            </article>
+                <div class="weekday-row" aria-hidden="true">
+                  <span>一</span>
+                  <span>二</span>
+                  <span>三</span>
+                  <span>四</span>
+                  <span>五</span>
+                  <span>六</span>
+                  <span>日</span>
+                </div>
+                <div class="calendar-grid" id="calendarGrid" role="grid" aria-label="月历"></div>
+                <div class="legend">
+                  <span><i class="dot holiday"></i>法定休假</span>
+                  <span><i class="dot makeup"></i>调休上班</span>
+                  <span><i class="dot solar"></i>节气/节日</span>
+                  <span><i class="dot schedule"></i>安排</span>
+                </div>
+              </article>
+
+              <article class="detail-card plan-card">
+                <div class="card-head">
+                  <p class="panel-label">个人安排</p>
+                  <span id="planCountText">当天 0 条</span>
+                </div>
+                <div class="plan-section">
+                  <div class="plan-section-head">
+                    <strong>安排</strong>
+                    <span id="scheduleCountText">0 项</span>
+                  </div>
+                  <form class="schedule-form" id="scheduleForm">
+                    <input id="scheduleTitleInput" name="title" type="text" maxlength="28" placeholder="添加安排，例如：体检 / 缴费 / 接孩子" required />
+                    <div class="schedule-grid">
+                      <input id="scheduleDateInput" name="date" type="date" required />
+                      <input id="scheduleTimeInput" name="time" type="time" />
+                    </div>
+                    <textarea id="scheduleNoteInput" name="note" rows="3" maxlength="80" placeholder="备注（可选）"></textarea>
+                    <button type="submit" class="button primary small">保存安排</button>
+                  </form>
+                  <div class="schedule-list" id="scheduleList"></div>
+                </div>
+              </article>
+            </div>
 
             <aside class="detail-column">
               <article class="detail-card focus-card">
@@ -147,29 +172,6 @@
                 <p id="solarTermDateText"></p>
                 <p id="solarTermDescription"></p>
                 <div class="mini-list" id="solarMetaList"></div>
-              </article>
-
-              <article class="detail-card plan-card">
-                <div class="card-head">
-                  <p class="panel-label">个人安排</p>
-                  <span id="planCountText">当天 0 条</span>
-                </div>
-                <div class="plan-section">
-                  <div class="plan-section-head">
-                    <strong>安排</strong>
-                    <span id="scheduleCountText">0 项</span>
-                  </div>
-                  <form class="schedule-form" id="scheduleForm">
-                    <input id="scheduleTitleInput" name="title" type="text" maxlength="28" placeholder="添加安排，例如：体检 / 缴费 / 接孩子" required />
-                    <div class="schedule-grid">
-                      <input id="scheduleDateInput" name="date" type="date" required />
-                      <input id="scheduleTimeInput" name="time" type="time" />
-                    </div>
-                    <textarea id="scheduleNoteInput" name="note" rows="3" maxlength="80" placeholder="备注（可选）"></textarea>
-                    <button type="submit" class="button primary small">保存安排</button>
-                  </form>
-                  <div class="schedule-list" id="scheduleList"></div>
-                </div>
               </article>
             </aside>
           </div>

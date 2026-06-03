@@ -559,6 +559,11 @@ h3 {
   align-items: start;
 }
 
+.calendar-main-column {
+  display: grid;
+  gap: 18px;
+}
+
 .calendar-panel {
   padding: 24px;
 }
