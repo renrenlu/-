@@ -1278,6 +1278,8 @@ function applyThemeSettings(theme) {
   const buttonStart = preset.buttonStart || "#ff91c0";
   const buttonEnd = preset.buttonEnd || "#f774ad";
   const buttonShadow = preset.buttonShadow || "rgba(244, 106, 165, 0.28)";
+  const accentRgb = hexToRgb(accent);
+  const mintRgb = hexToRgb(mint);
 
   const root = document.documentElement;
   root.style.setProperty("--accent", accent);
@@ -1296,6 +1298,22 @@ function applyThemeSettings(theme) {
   root.style.setProperty("--glow-1", mixHex(glow, "#fff7fb", 0.28));
   root.style.setProperty("--glow-2", mixHex(glow, "#ece8eb", 0.48));
   root.style.setProperty("--glow-3", mixHex(accent, "#fff0f6", 0.7));
+  root.style.setProperty("--calendar-border", rgbaString(accentRgb, 0.2));
+  root.style.setProperty("--calendar-border-hover", rgbaString(accentRgb, 0.3));
+  root.style.setProperty("--calendar-border-strong", rgbaString(accentRgb, 0.46));
+  root.style.setProperty("--calendar-inset", rgbaString(accentRgb, 0.2));
+  root.style.setProperty("--calendar-shadow", rgbaString(accentRgb, 0.13));
+  root.style.setProperty("--calendar-selected-shadow", rgbaString(accentRgb, 0.14));
+  root.style.setProperty("--calendar-today-start", rgbaString(accentRgb, 0.18));
+  root.style.setProperty("--calendar-today-end", rgbaString(accentRgb, 0.06));
+  root.style.setProperty("--calendar-selected-start", rgbaString(accentRgb, 0.11));
+  root.style.setProperty("--calendar-selected-end", rgbaString(accentRgb, 0.04));
+  root.style.setProperty("--calendar-active-start", rgbaString(accentRgb, 0.24));
+  root.style.setProperty("--calendar-active-end", rgbaString(accentRgb, 0.08));
+  root.style.setProperty("--calendar-holiday-start", rgbaString(accentRgb, 0.13));
+  root.style.setProperty("--calendar-holiday-end", rgbaString(accentRgb, 0.04));
+  root.style.setProperty("--calendar-makeup-start", rgbaString(mintRgb, 0.14));
+  root.style.setProperty("--calendar-makeup-end", rgbaString(mintRgb, 0.04));
 }
 
 function normalizeHex(value) {
@@ -1329,6 +1347,10 @@ function hexToRgb(hex) {
 
 function rgbToHex(red, green, blue) {
   return `#${[red, green, blue].map((item) => item.toString(16).padStart(2, "0")).join("")}`;
+}
+
+function rgbaString(rgb, alpha) {
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
 }
 
 function isLunarNewYearsEve(lunar, date) {
