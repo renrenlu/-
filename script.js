@@ -509,6 +509,9 @@ function renderSchedules() {
     });
 
     wrapper.querySelector(".schedule-remove").addEventListener("click", async () => {
+      if (!window.confirm("确定删除这项安排吗？")) {
+        return;
+      }
       await userStore.deleteSchedule(item.id);
       state.schedules = state.schedules.filter((entry) => entry.id !== item.id);
       renderSelectedDetail();
@@ -568,6 +571,9 @@ function renderCountdowns() {
       ${item.custom ? `<button type="button" class="countdown-remove" data-countdown-id="${escapeHTML(item.id)}">删除</button>` : ""}
     `;
     card.querySelector(".countdown-remove")?.addEventListener("click", async () => {
+      if (!window.confirm("确定删除这个倒计时吗？")) {
+        return;
+      }
       state.customCountdowns = state.customCountdowns.filter((entry) => entry.id !== item.id);
       await persistCustomCountdowns();
       renderCountdowns();
