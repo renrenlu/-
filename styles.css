@@ -906,6 +906,33 @@ h3 {
   scroll-margin-top: 14px;
 }
 
+.focus-card .today-grid {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.focus-card .today-grid div {
+  display: inline-flex;
+  align-items: baseline;
+  max-width: 100%;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 999px;
+}
+
+.focus-card .today-grid span {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+  font-size: 11px;
+}
+
+.focus-card .today-grid strong {
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .plan-card {
   display: grid;
   gap: 18px;
