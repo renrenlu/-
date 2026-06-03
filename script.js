@@ -478,25 +478,33 @@ function renderSchedules() {
   const list = selectedSchedules.length ? selectedSchedules : upcomingSchedules;
   list.forEach((item) => {
     const wrapper = document.createElement("div");
-    wrapper.className = `schedule-item${item.done ? " is-done" : ""}`;
+    wrapper.className = "swipe-row schedule-swipe-row";
     const scheduleDate = parseISODate(item.date);
     const summary = sameDate(scheduleDate, state.selectedDate)
       ? `${item.time || "全天"} · 当天安排`
       : `${item.date}${item.time ? ` ${item.time}` : ""}`;
 
     wrapper.innerHTML = `
-      <button type="button" class="schedule-toggle" aria-label="${item.done ? "标记未完成" : "标记已完成"}">
-        ${item.done ? "✓" : ""}
-      </button>
-      <div class="schedule-copy">
-        <strong>${item.title}</strong>
-        <p>${summary}</p>
-        ${item.note ? `<p>${item.note}</p>` : ""}
+      <div class="swipe-actions">
+        <button type="button" class="schedule-remove">删除</button>
       </div>
-      <button type="button" class="schedule-remove">删除</button>
+      <div class="swipe-surface schedule-item${item.done ? " is-done" : ""}">
+        <button type="button" class="schedule-toggle" aria-label="${item.done ? "标记未完成" : "标记已完成"}">
+          ${item.done ? "✓" : ""}
+        </button>
+        <div class="schedule-copy">
+          <strong>${item.title}</strong>
+          <p>${summary}</p>
+          ${item.note ? `<p>${item.note}</p>` : ""}
+        </div>
+      </div>
     `;
 
     wrapper.querySelector(".schedule-toggle").addEventListener("click", async () => {
+      if (wrapper.classList.contains("is-revealed")) {
+        wrapper.classList.remove("is-revealed");
+        return;
+      }
       item.done = !item.done;
       item.updatedAt = new Date().toISOString();
       await userStore.saveSchedule(item);
@@ -507,6 +515,8 @@ function renderSchedules() {
       renderCountdowns();
       renderDataStatus();
     });
+
+    bindSwipeReveal(wrapper, wrapper.querySelector(".swipe-surface"));
 
     wrapper.querySelector(".schedule-remove").addEventListener("click", async () => {
       if (!window.confirm("确定删除这项安排吗？")) {
@@ -562,15 +572,32 @@ function renderCountdowns() {
   const countdowns = getCountdownItems();
   dom.countdownList.innerHTML = "";
   countdowns.forEach((item) => {
-    const card = document.createElement("article");
-    card.className = `countdown-card${item.custom ? " is-custom" : ""}`;
-    card.innerHTML = `
-      <strong>${escapeHTML(item.days)}</strong>
-      <p>${escapeHTML(item.title)}</p>
-      <p>${escapeHTML(item.note)}</p>
-      ${item.custom ? `<button type="button" class="countdown-remove" data-countdown-id="${escapeHTML(item.id)}">删除</button>` : ""}
+    if (!item.custom) {
+      const card = document.createElement("article");
+      card.className = "countdown-card";
+      card.innerHTML = `
+        <strong>${escapeHTML(item.days)}</strong>
+        <p>${escapeHTML(item.title)}</p>
+        <p>${escapeHTML(item.note)}</p>
+      `;
+      dom.countdownList.appendChild(card);
+      return;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "swipe-row countdown-swipe-row";
+    wrapper.innerHTML = `
+      <div class="swipe-actions">
+        <button type="button" class="countdown-remove" data-countdown-id="${escapeHTML(item.id)}">删除</button>
+      </div>
+      <article class="swipe-surface countdown-card is-custom">
+        <strong>${escapeHTML(item.days)}</strong>
+        <p>${escapeHTML(item.title)}</p>
+        <p>${escapeHTML(item.note)}</p>
+      </article>
     `;
-    card.querySelector(".countdown-remove")?.addEventListener("click", async () => {
+    bindSwipeReveal(wrapper, wrapper.querySelector(".swipe-surface"));
+    wrapper.querySelector(".countdown-remove")?.addEventListener("click", async () => {
       if (!window.confirm("确定删除这个倒计时吗？")) {
         return;
       }
@@ -579,7 +606,76 @@ function renderCountdowns() {
       renderCountdowns();
       renderDataStatus();
     });
-    dom.countdownList.appendChild(card);
+    dom.countdownList.appendChild(wrapper);
+  });
+}
+
+function bindSwipeReveal(row, surface) {
+  if (!row || !surface) {
+    return;
+  }
+
+  let startX = 0;
+  let startY = 0;
+  let deltaX = 0;
+  let dragging = false;
+  const maxOffset = 86;
+
+  const closeOtherRows = () => {
+    document.querySelectorAll(".swipe-row.is-revealed").forEach((item) => {
+      if (item !== row) {
+        item.classList.remove("is-revealed");
+        const itemSurface = item.querySelector(".swipe-surface");
+        if (itemSurface) {
+          itemSurface.style.transform = "";
+        }
+      }
+    });
+  };
+
+  surface.addEventListener("touchstart", (event) => {
+    const touch = event.touches[0];
+    startX = touch.clientX;
+    startY = touch.clientY;
+    deltaX = 0;
+    dragging = true;
+    surface.classList.add("is-dragging");
+    closeOtherRows();
+  }, { passive: true });
+
+  surface.addEventListener("touchmove", (event) => {
+    if (!dragging) {
+      return;
+    }
+    const touch = event.touches[0];
+    deltaX = touch.clientX - startX;
+    const deltaY = touch.clientY - startY;
+    if (Math.abs(deltaY) > Math.abs(deltaX)) {
+      return;
+    }
+    event.preventDefault();
+    const currentOffset = row.classList.contains("is-revealed") ? -maxOffset : 0;
+    const nextOffset = Math.max(-maxOffset, Math.min(0, currentOffset + deltaX));
+    surface.style.transform = `translateX(${nextOffset}px)`;
+  }, { passive: false });
+
+  surface.addEventListener("touchend", () => {
+    if (!dragging) {
+      return;
+    }
+    dragging = false;
+    surface.classList.remove("is-dragging");
+    const shouldReveal = row.classList.contains("is-revealed") ? deltaX < 34 : deltaX < -34;
+    row.classList.toggle("is-revealed", shouldReveal);
+    surface.style.transform = "";
+  });
+
+  surface.addEventListener("click", (event) => {
+    if (!row.classList.contains("is-revealed")) {
+      return;
+    }
+    event.preventDefault();
+    row.classList.remove("is-revealed");
   });
 }
 
