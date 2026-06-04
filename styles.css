@@ -576,8 +576,22 @@ h3 {
   gap: 16px;
 }
 
+.calendar-toolbar {
+  position: relative;
+  min-height: 54px;
+  padding-right: 124px;
+}
+
+.calendar-toolbar .toolbar-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+}
+
 .calendar-toolbar h3,
 .solar-card h3 {
+  min-width: 0;
   color: var(--accent-dark);
   font-size: 32px;
   font-weight: 300;
@@ -587,6 +601,7 @@ h3 {
 
 .toolbar-actions {
   display: flex;
+  justify-content: flex-end;
   gap: 10px;
   margin-left: auto;
 }
@@ -596,6 +611,8 @@ h3 {
   height: 46px;
   border-radius: 50%;
   color: #fffafb;
+  font-size: 22px;
+  font-weight: 800;
   background: linear-gradient(135deg, var(--button-start), var(--button-end));
   box-shadow: 0 12px 24px rgba(244, 106, 165, 0.24);
 }
@@ -858,6 +875,10 @@ h3 {
   font-size: 15px;
 }
 
+.today-grid .today-grid-wide {
+  grid-column: 1 / -1;
+}
+
 .selected-schedule-preview {
   display: grid;
   gap: 10px;
@@ -931,6 +952,15 @@ h3 {
   min-width: 0;
   font-size: 13px;
   line-height: 1.45;
+}
+
+.focus-card .today-grid .today-grid-wide {
+  display: grid;
+  flex-basis: 100%;
+  width: 100%;
+  justify-items: start;
+  gap: 4px;
+  border-radius: 18px;
 }
 
 .plan-card {
@@ -1720,12 +1750,19 @@ h2 {
 }
 
 .toolbar-actions {
+  width: auto;
   gap: 8px;
+  margin-left: auto;
+}
+
+.calendar-toolbar .toolbar-actions {
+  width: auto;
 }
 
 .icon-button {
-  width: 38px;
-  height: 38px;
+  width: 54px;
+  height: 54px;
+  font-size: 26px;
 }
 
 .weekday-row,
@@ -2059,5 +2096,52 @@ h2 {
 
   .footer {
     font-size: 13px;
+  }
+}
+
+.calendar-toolbar .toolbar-actions {
+  display: flex;
+  width: 116px;
+  justify-content: flex-end;
+}
+
+.calendar-toolbar #prevMonthButton,
+.calendar-toolbar #nextMonthButton {
+  position: static;
+}
+
+@media (min-width: 761px) {
+  .calendar-toolbar .toolbar-actions {
+    width: 102px;
+  }
+}
+
+.calendar-toolbar {
+  display: block !important;
+  padding-right: 182px !important;
+}
+
+.calendar-toolbar h3 {
+  max-width: none;
+  white-space: nowrap;
+}
+
+.calendar-toolbar .toolbar-actions {
+  position: absolute !important;
+  top: 0;
+  right: 58px;
+  flex: 0 0 116px;
+  width: 116px !important;
+}
+
+@media (min-width: 761px) {
+  .calendar-toolbar h3 {
+    max-width: calc(100% - 110px);
+  }
+
+  .calendar-toolbar .toolbar-actions {
+    flex-basis: 102px;
+    right: 0;
+    width: 102px !important;
   }
 }
