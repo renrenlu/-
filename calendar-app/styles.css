@@ -2140,7 +2140,8 @@ h2 {
 
 .calendar-toolbar {
   display: block !important;
-  padding-right: 92px !important;
+  min-height: 72px;
+  padding-right: 110px !important;
 }
 
 .calendar-toolbar h3 {
@@ -2150,8 +2151,8 @@ h2 {
 
 .calendar-toolbar .toolbar-actions {
   position: absolute !important;
-  top: 0;
-  right: 56px;
+  top: 24px;
+  right: 72px;
   flex: 0 0 82px;
   width: 82px !important;
   gap: 10px;
@@ -2165,6 +2166,10 @@ h2 {
   font-size: 30px;
   line-height: 1;
   box-shadow: 0 8px 18px rgba(244, 106, 165, 0.2);
+}
+
+.calendar-panel .weekday-row {
+  margin-top: 18px;
 }
 
 @media (min-width: 761px) {
