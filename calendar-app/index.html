@@ -15,7 +15,7 @@
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" href="./assets/icon-calendar.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="./assets/icon-calendar.svg" />
-    <link rel="stylesheet" href="./styles.css?v=28" />
+    <link rel="stylesheet" href="./styles.css?v=29" />
   </head>
   <body>
     <div class="app-shell">
@@ -125,7 +125,10 @@
                       <input id="scheduleTimeInput" name="time" type="time" />
                     </div>
                     <textarea id="scheduleNoteInput" name="note" rows="3" maxlength="80" placeholder="备注（可选）"></textarea>
-                    <button type="submit" class="button primary small">保存安排</button>
+                    <div class="schedule-form-actions">
+                      <button type="submit" class="button primary small" id="scheduleSubmitButton">保存安排</button>
+                      <button type="button" class="button secondary small is-hidden" id="scheduleEditCancelButton">取消修改</button>
+                    </div>
                   </form>
                   <div class="schedule-list" id="scheduleList"></div>
                 </div>
@@ -284,6 +287,6 @@
 
     <script src="./calendar-data.js"></script>
     <script src="./user-data-store.js"></script>
-    <script src="./script.js?v=28"></script>
+    <script src="./script.js?v=29"></script>
   </body>
 </html>
