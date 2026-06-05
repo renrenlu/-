@@ -109,6 +109,7 @@ const state = {
   selectedDate: today,
   schedules: [],
   customCountdowns: [],
+  editingScheduleId: null,
   theme: { preset: "rose" }
 };
 
@@ -150,6 +151,8 @@ const dom = {
   scheduleDateInput: document.querySelector("#scheduleDateInput"),
   scheduleTimeInput: document.querySelector("#scheduleTimeInput"),
   scheduleNoteInput: document.querySelector("#scheduleNoteInput"),
+  scheduleSubmitButton: document.querySelector("#scheduleSubmitButton"),
+  scheduleEditCancelButton: document.querySelector("#scheduleEditCancelButton"),
   scheduleCountText: document.querySelector("#scheduleCountText"),
   scheduleList: document.querySelector("#scheduleList"),
   dateDiffForm: document.querySelector("#dateDiffForm"),
@@ -199,6 +202,7 @@ async function init() {
   dom.installAppButton.addEventListener("click", handleInstallClick);
 
   dom.scheduleForm.addEventListener("submit", handleScheduleSubmit);
+  dom.scheduleEditCancelButton.addEventListener("click", resetScheduleForm);
   dom.dateDiffForm.addEventListener("submit", handleDateDiffSubmit);
   dom.countdownForm.addEventListener("submit", handleCountdownSubmit);
   bindThemeControls();
@@ -481,6 +485,7 @@ function renderSchedules() {
 
     wrapper.innerHTML = `
       <div class="swipe-actions">
+        <button type="button" class="schedule-edit">修改</button>
         <button type="button" class="schedule-remove">删除</button>
       </div>
       <div class="swipe-surface schedule-item${item.done ? " is-done" : ""}">
@@ -513,12 +518,20 @@ function renderSchedules() {
 
     bindSwipeReveal(wrapper, wrapper.querySelector(".swipe-surface"));
 
+    wrapper.querySelector(".schedule-edit").addEventListener("click", () => {
+      beginScheduleEdit(item);
+      wrapper.classList.remove("is-revealed");
+    });
+
     wrapper.querySelector(".schedule-remove").addEventListener("click", async () => {
       if (!window.confirm("确定删除这项安排吗？")) {
         return;
       }
       await userStore.deleteSchedule(item.id);
       state.schedules = state.schedules.filter((entry) => entry.id !== item.id);
+      if (state.editingScheduleId === item.id) {
+        resetScheduleForm();
+      }
       renderSelectedDetail();
       renderSchedules();
       renderCalendar();
@@ -528,6 +541,26 @@ function renderSchedules() {
 
     dom.scheduleList.appendChild(wrapper);
   });
+}
+
+function beginScheduleEdit(item) {
+  state.editingScheduleId = item.id;
+  dom.scheduleTitleInput.value = item.title;
+  dom.scheduleDateInput.value = item.date;
+  dom.scheduleTimeInput.value = item.time || "";
+  dom.scheduleNoteInput.value = item.note || "";
+  dom.scheduleSubmitButton.textContent = "保存修改";
+  dom.scheduleEditCancelButton.classList.remove("is-hidden");
+  dom.scheduleTitleInput.focus();
+  dom.scheduleForm.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function resetScheduleForm() {
+  state.editingScheduleId = null;
+  dom.scheduleForm.reset();
+  dom.scheduleDateInput.value = formatISO(state.selectedDate);
+  dom.scheduleSubmitButton.textContent = "保存安排";
+  dom.scheduleEditCancelButton.classList.add("is-hidden");
 }
 
 function renderPlanCount() {
@@ -694,6 +727,37 @@ async function handleScheduleSubmit(event) {
     return;
   }
 
+  if (state.editingScheduleId) {
+    const existing = state.schedules.find((item) => item.id === state.editingScheduleId);
+    if (!existing) {
+      resetScheduleForm();
+      return;
+    }
+
+    const schedule = {
+      ...existing,
+      title,
+      date,
+      time,
+      note,
+      updatedAt: new Date().toISOString()
+    };
+
+    await userStore.saveSchedule(schedule);
+    state.schedules = state.schedules.map((item) => (item.id === schedule.id ? schedule : item)).sort(compareSchedules);
+    resetScheduleForm();
+    const scheduleDate = parseISODate(schedule.date);
+    if (scheduleDate) {
+      selectDate(scheduleDate, { openSchedule: true });
+    } else {
+      renderSelectedDetail();
+      renderSchedules();
+    }
+    renderCountdowns();
+    renderDataStatus();
+    return;
+  }
+
   const schedule = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     title,
@@ -709,7 +773,7 @@ async function handleScheduleSubmit(event) {
   await userStore.saveSchedule(schedule);
   state.schedules.push(schedule);
   state.schedules.sort(compareSchedules);
-  dom.scheduleForm.reset();
+  resetScheduleForm();
   const scheduleDate = parseISODate(schedule.date);
   if (scheduleDate) {
     selectDate(scheduleDate, { openSchedule: true });
@@ -1285,7 +1349,7 @@ function registerServiceWorker() {
     return;
   }
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js?v=28").catch(() => {
+    navigator.serviceWorker.register("./service-worker.js?v=29").catch(() => {
       setInstallHint("当前页面可正常使用。");
     });
   });

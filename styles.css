@@ -1019,6 +1019,12 @@ h3 {
   gap: 10px;
 }
 
+.schedule-form-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
 .planner-list,
 .schedule-list {
   display: grid;
@@ -1072,6 +1078,10 @@ h3 {
 }
 
 .swipe-row.is-revealed .swipe-surface {
+  transform: translateX(-136px);
+}
+
+.countdown-swipe-row.is-revealed .swipe-surface {
   transform: translateX(-86px);
 }
 
@@ -1080,20 +1090,40 @@ h3 {
   inset: 0 0 0 auto;
   z-index: 0;
   display: flex;
-  width: 86px;
+  width: 136px;
   align-items: stretch;
   justify-content: flex-end;
 }
 
+.countdown-swipe-row .swipe-actions {
+  width: 86px;
+}
+
+.swipe-actions .schedule-edit,
 .swipe-actions .schedule-remove,
 .swipe-actions .countdown-remove {
-  width: 86px;
+  width: 68px;
   height: 100%;
   min-height: 100%;
   margin: 0;
   padding: 0 12px;
-  border-radius: 0 22px 22px 0;
   box-shadow: none;
+}
+
+.swipe-actions .schedule-edit {
+  color: var(--accent-dark);
+  background: rgba(255, 241, 247, 0.96);
+}
+
+.swipe-actions .schedule-remove,
+.swipe-actions .countdown-remove {
+  color: #fffafb;
+  border-radius: 0 22px 22px 0;
+  background: linear-gradient(135deg, var(--button-start), var(--button-end));
+}
+
+.swipe-actions .countdown-remove {
+  width: 86px;
 }
 
 .schedule-item.is-done {
@@ -1102,6 +1132,7 @@ h3 {
 }
 
 .schedule-toggle,
+.schedule-edit,
 .schedule-remove {
   display: inline-flex;
   align-items: center;
@@ -1885,7 +1916,11 @@ h2 {
 }
 
 .swipe-actions .schedule-remove {
-  width: 86px;
+  width: 68px;
+}
+
+.swipe-actions .schedule-edit {
+  width: 68px;
 }
 
 .tool-grid,
