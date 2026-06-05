@@ -875,10 +875,6 @@ h3 {
   font-size: 15px;
 }
 
-.today-grid .today-grid-wide {
-  grid-column: 1 / -1;
-}
-
 .selected-schedule-preview {
   display: grid;
   gap: 10px;
@@ -933,6 +929,12 @@ h3 {
   margin: 12px 0;
 }
 
+.daily-advice-grid {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+
 .focus-card .today-grid div {
   display: inline-flex;
   align-items: baseline;
@@ -942,9 +944,23 @@ h3 {
   border-radius: 999px;
 }
 
+.daily-advice-grid div {
+  display: grid;
+  justify-items: start;
+  gap: 5px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(253, 249, 251, 0.92), rgba(247, 241, 244, 0.88));
+}
+
 .focus-card .today-grid span {
   flex: 0 0 auto;
   margin-bottom: 0;
+  font-size: 11px;
+}
+
+.daily-advice-grid span {
+  color: var(--muted);
   font-size: 11px;
 }
 
@@ -954,13 +970,9 @@ h3 {
   line-height: 1.45;
 }
 
-.focus-card .today-grid .today-grid-wide {
-  display: grid;
-  flex-basis: 100%;
-  width: 100%;
-  justify-items: start;
-  gap: 4px;
-  border-radius: 18px;
+.daily-advice-grid strong {
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .plan-card {
