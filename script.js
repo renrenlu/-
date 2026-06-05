@@ -1285,7 +1285,7 @@ function registerServiceWorker() {
     return;
   }
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js?v=27").catch(() => {
+    navigator.serviceWorker.register("./service-worker.js?v=28").catch(() => {
       setInstallHint("当前页面可正常使用。");
     });
   });
