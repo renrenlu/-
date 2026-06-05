@@ -582,7 +582,7 @@ function renderCountdowns() {
   const countdowns = getCountdownItems();
   dom.countdownList.innerHTML = "";
   countdowns.forEach((item) => {
-    if (!item.custom && !item.scheduleId) {
+    if (!item.custom) {
       const card = document.createElement("article");
       card.className = "countdown-card";
       card.innerHTML = `
@@ -608,20 +608,11 @@ function renderCountdowns() {
     `;
     bindSwipeReveal(wrapper, wrapper.querySelector(".swipe-surface"));
     wrapper.querySelector(".countdown-remove")?.addEventListener("click", async () => {
-      const message = item.scheduleId ? "确定删除这项安排吗？" : "确定删除这个倒计时吗？";
-      if (!window.confirm(message)) {
+      if (!window.confirm("确定删除这个倒计时吗？")) {
         return;
       }
-      if (item.scheduleId) {
-        await userStore.deleteSchedule(item.scheduleId);
-        state.schedules = state.schedules.filter((entry) => entry.id !== item.scheduleId);
-        renderSelectedDetail();
-        renderSchedules();
-        renderCalendar();
-      } else {
-        state.customCountdowns = state.customCountdowns.filter((entry) => entry.id !== item.id);
-        await persistCustomCountdowns();
-      }
+      state.customCountdowns = state.customCountdowns.filter((entry) => entry.id !== item.id);
+      await persistCustomCountdowns();
       renderCountdowns();
       renderDataStatus();
     });
@@ -848,19 +839,6 @@ function getCountdownItems() {
       title: `下一个法定假期 · ${nextHoliday.name}`,
       days: `还有 ${daysBetween(today, parseISODate(nextHoliday.start))} 天`,
       note: `${nextHoliday.start} 开始`
-    });
-  }
-
-  const schedule = [...state.schedules]
-    .filter((item) => !item.done && daysBetween(today, parseISODate(item.date)) >= 0)
-    .sort(compareSchedules)[0];
-  if (schedule) {
-    items.push({
-      id: `schedule-${schedule.id}`,
-      scheduleId: schedule.id,
-      title: `最近安排 · ${schedule.title}`,
-      days: `还有 ${daysBetween(today, parseISODate(schedule.date))} 天`,
-      note: `${schedule.date}${schedule.time ? ` ${schedule.time}` : ""}`
     });
   }
 
