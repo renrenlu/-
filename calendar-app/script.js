@@ -466,8 +466,8 @@ function renderSchedules() {
 
   renderPlanCount();
   dom.scheduleCountText.textContent = selectedSchedules.length
-    ? `当天 ${selectedSchedules.length} 项 / 全部 ${state.schedules.length} 项`
-    : `全部 ${state.schedules.length} 项`;
+    ? getScheduleCountLabel(selectedSchedules.length, state.schedules.length, "项")
+    : `总安排 ${state.schedules.length} 项`;
   dom.scheduleList.innerHTML = "";
 
   if (!state.schedules.length) {
@@ -481,8 +481,8 @@ function renderSchedules() {
     wrapper.className = "swipe-row schedule-swipe-row";
     const scheduleDate = parseISODate(item.date);
     const summary = sameDate(scheduleDate, state.selectedDate)
-      ? `${item.time || "全天"} · 当天安排`
-      : `${item.date}${item.time ? ` ${item.time}` : ""}`;
+      ? `${formatScheduleDateLine(item)} · 选中日期安排`
+      : formatScheduleDateLine(item);
 
     wrapper.innerHTML = `
       <div class="swipe-actions">
@@ -493,9 +493,9 @@ function renderSchedules() {
           ${item.done ? "✓" : ""}
         </button>
         <div class="schedule-copy">
-          <strong>${item.title}</strong>
-          <p>${summary}</p>
-          ${item.note ? `<p>${item.note}</p>` : ""}
+          <strong>${escapeHTML(item.title)}</strong>
+          <p>${escapeHTML(summary)}</p>
+          ${item.note ? `<p>${escapeHTML(item.note)}</p>` : ""}
         </div>
       </div>
     `;
@@ -543,8 +543,18 @@ function renderPlanCount() {
   const selectedCount = getSchedulesForDate(state.selectedDate).length;
   const totalCount = state.schedules.length;
   dom.planCountText.textContent = selectedCount
-    ? `当天 ${selectedCount} 条 / 全部 ${totalCount} 条`
-    : `全部 ${totalCount} 条`;
+    ? getScheduleCountLabel(selectedCount, totalCount, "条")
+    : `总安排 ${totalCount} 条`;
+}
+
+function getScheduleCountLabel(selectedCount, totalCount, unit) {
+  return `选中日期 ${selectedCount} ${unit} / 总安排 ${totalCount} ${unit}`;
+}
+
+function formatScheduleDateLine(item) {
+  const date = parseISODate(item.date);
+  const dateText = date ? formatDateTitle(date) : item.date;
+  return `${dateText} · ${item.time || "全天"}`;
 }
 
 function renderLeavePlanner() {
@@ -572,7 +582,7 @@ function renderCountdowns() {
   const countdowns = getCountdownItems();
   dom.countdownList.innerHTML = "";
   countdowns.forEach((item) => {
-    if (!item.custom) {
+    if (!item.custom && !item.scheduleId) {
       const card = document.createElement("article");
       card.className = "countdown-card";
       card.innerHTML = `
@@ -590,7 +600,7 @@ function renderCountdowns() {
       <div class="swipe-actions">
         <button type="button" class="countdown-remove" data-countdown-id="${escapeHTML(item.id)}">删除</button>
       </div>
-      <article class="swipe-surface countdown-card is-custom">
+      <article class="swipe-surface countdown-card ${item.custom ? "is-custom" : "is-schedule"}">
         <strong>${escapeHTML(item.days)}</strong>
         <p>${escapeHTML(item.title)}</p>
         <p>${escapeHTML(item.note)}</p>
@@ -598,11 +608,20 @@ function renderCountdowns() {
     `;
     bindSwipeReveal(wrapper, wrapper.querySelector(".swipe-surface"));
     wrapper.querySelector(".countdown-remove")?.addEventListener("click", async () => {
-      if (!window.confirm("确定删除这个倒计时吗？")) {
+      const message = item.scheduleId ? "确定删除这项安排吗？" : "确定删除这个倒计时吗？";
+      if (!window.confirm(message)) {
         return;
       }
-      state.customCountdowns = state.customCountdowns.filter((entry) => entry.id !== item.id);
-      await persistCustomCountdowns();
+      if (item.scheduleId) {
+        await userStore.deleteSchedule(item.scheduleId);
+        state.schedules = state.schedules.filter((entry) => entry.id !== item.scheduleId);
+        renderSelectedDetail();
+        renderSchedules();
+        renderCalendar();
+      } else {
+        state.customCountdowns = state.customCountdowns.filter((entry) => entry.id !== item.id);
+        await persistCustomCountdowns();
+      }
       renderCountdowns();
       renderDataStatus();
     });
@@ -837,6 +856,8 @@ function getCountdownItems() {
     .sort(compareSchedules)[0];
   if (schedule) {
     items.push({
+      id: `schedule-${schedule.id}`,
+      scheduleId: schedule.id,
       title: `最近安排 · ${schedule.title}`,
       days: `还有 ${daysBetween(today, parseISODate(schedule.date))} 天`,
       note: `${schedule.date}${schedule.time ? ` ${schedule.time}` : ""}`
@@ -1136,8 +1157,9 @@ function renderSelectedSchedulePreview(schedules) {
     .map(
       (item) => `
         <div class="selected-schedule-item${item.done ? " is-done" : ""}">
-          <strong>${item.title}</strong>
-          <p>${item.time || "全天"}${item.note ? ` · ${item.note}` : ""}</p>
+          <strong>${escapeHTML(item.title)}</strong>
+          <p>${escapeHTML(formatScheduleDateLine(item))}</p>
+          ${item.note ? `<p>${escapeHTML(item.note)}</p>` : ""}
         </div>
       `
     )
