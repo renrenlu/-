@@ -1022,8 +1022,8 @@ h3 {
 .planner-list,
 .schedule-list {
   display: grid;
-  gap: 12px;
-  margin-top: 16px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .schedule-item,
@@ -1046,9 +1046,11 @@ h3 {
 
 .schedule-item {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 10px;
   align-items: start;
+  padding: 12px 14px;
+  border-radius: 18px;
 }
 
 .swipe-row {
@@ -1109,13 +1111,13 @@ h3 {
 }
 
 .schedule-toggle {
-  width: 18px;
-  min-height: 18px;
+  width: 14px;
+  min-height: 14px;
   padding: 0;
-  margin-top: 2px;
-  border-radius: 7px;
+  margin-top: 4px;
+  border-radius: 6px;
   color: #fffafb;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
   background: linear-gradient(135deg, var(--button-start), var(--button-end));
   box-shadow: 0 6px 12px rgba(244, 106, 165, 0.14);
@@ -1127,13 +1129,20 @@ h3 {
 
 .schedule-copy strong {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 3px;
+  font-size: 15px;
+  line-height: 1.35;
 }
 
 .schedule-copy p {
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   color: var(--muted);
-  line-height: 1.65;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.schedule-copy .schedule-note {
+  font-size: 12px;
 }
 
 .schedule-copy p:last-child {
@@ -1861,12 +1870,13 @@ h2 {
 .schedule-item,
 .planner-item,
 .countdown-card {
-  padding: 14px;
+  padding: 12px;
   border-radius: 18px;
 }
 
 .schedule-item {
-  grid-template-columns: 20px minmax(0, 1fr);
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 9px;
 }
 
 .schedule-remove {

@@ -459,10 +459,7 @@ function renderSelectedDetail() {
 
 function renderSchedules() {
   const selectedSchedules = getSchedulesForDate(state.selectedDate);
-  const upcomingSchedules = [...state.schedules]
-    .filter((item) => daysBetween(today, parseISODate(item.date)) >= 0)
-    .sort(compareSchedules)
-    .slice(0, 4);
+  const allSchedules = [...state.schedules].sort(compareSchedules);
 
   renderPlanCount();
   dom.scheduleCountText.textContent = selectedSchedules.length
@@ -475,14 +472,12 @@ function renderSchedules() {
     return;
   }
 
-  const list = selectedSchedules.length ? selectedSchedules : upcomingSchedules;
-  list.forEach((item) => {
+  allSchedules.forEach((item) => {
     const wrapper = document.createElement("div");
     wrapper.className = "swipe-row schedule-swipe-row";
     const scheduleDate = parseISODate(item.date);
-    const summary = sameDate(scheduleDate, state.selectedDate)
-      ? `${formatScheduleDateLine(item)} · 选中日期安排`
-      : formatScheduleDateLine(item);
+    const isSelectedDate = sameDate(scheduleDate, state.selectedDate);
+    const summary = `${formatScheduleDateLine(item)}${isSelectedDate ? " · 选中日期" : ""}`;
 
     wrapper.innerHTML = `
       <div class="swipe-actions">
@@ -495,7 +490,7 @@ function renderSchedules() {
         <div class="schedule-copy">
           <strong>${escapeHTML(item.title)}</strong>
           <p>${escapeHTML(summary)}</p>
-          ${item.note ? `<p>${escapeHTML(item.note)}</p>` : ""}
+          ${item.note ? `<p class="schedule-note">${escapeHTML(item.note)}</p>` : ""}
         </div>
       </div>
     `;
