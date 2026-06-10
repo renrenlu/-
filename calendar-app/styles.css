@@ -2218,3 +2218,92 @@ h2 {
     width: 82px !important;
   }
 }
+
+@media (max-width: 760px) {
+  .calendar-panel {
+    padding: 12px;
+  }
+
+  .calendar-toolbar {
+    min-height: 58px;
+    padding-right: 94px !important;
+  }
+
+  .calendar-toolbar h3 {
+    font-size: 30px;
+    line-height: 1.04;
+  }
+
+  .calendar-toolbar .toolbar-actions {
+    top: 8px;
+    right: 12px;
+    gap: 8px;
+  }
+
+  .calendar-toolbar .icon-button {
+    width: 34px;
+    height: 34px;
+    min-height: 34px;
+    font-size: 26px;
+  }
+
+  .calendar-panel .weekday-row {
+    margin: 8px 0 6px;
+  }
+
+  .weekday-row,
+  .calendar-grid {
+    gap: 4px;
+  }
+
+  .weekday-row span {
+    min-height: 20px;
+    font-size: 10px;
+  }
+
+  .day-cell {
+    min-height: 66px;
+    gap: 2px;
+    padding: 7px 6px 6px;
+    border-radius: 14px;
+  }
+
+  .day-top {
+    gap: 2px;
+  }
+
+  .day-number {
+    font-size: 14px;
+  }
+
+  .day-badge {
+    width: 13px;
+    height: 13px;
+    font-size: 6px;
+  }
+
+  .day-label,
+  .day-note {
+    font-size: 9px;
+    line-height: 1.22;
+  }
+
+  .schedule-markers {
+    gap: 3px;
+  }
+
+  .schedule-markers i {
+    width: 6px;
+    height: 6px;
+  }
+
+  .legend {
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 10px;
+  }
+
+  .legend span {
+    gap: 6px;
+  }
+}
