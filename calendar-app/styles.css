@@ -2262,10 +2262,10 @@ h2 {
   }
 
   .day-cell {
-    min-height: 66px;
-    gap: 2px;
-    padding: 7px 6px 6px;
-    border-radius: 14px;
+    min-height: 74px;
+    gap: 3px;
+    padding: 8px 6px 7px;
+    border-radius: 15px;
   }
 
   .day-top {
