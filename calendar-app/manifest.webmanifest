@@ -1,7 +1,7 @@
 {
-  "name": "节序万年历",
-  "short_name": "节序",
-  "description": "任何人都能直接上手的生活日历 App，支持公历、农历、节气、节假日、提醒与倒计时。",
+  "name": "有期日历——倒计时万年历工具",
+  "short_name": "有期日历",
+  "description": "简约好用的倒计时万年历工具，支持公历、农历、节气、节假日、提醒与个人安排。",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
