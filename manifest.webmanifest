@@ -2,13 +2,29 @@
   "name": "有期日历——倒计时万年历工具",
   "short_name": "有期日历",
   "description": "简约好用的倒计时万年历工具，支持公历、农历、节气、节假日、提醒与个人安排。",
-  "start_url": "./index.html",
+  "id": "/-/calendar-app/",
+  "start_url": "./index.html?source=pwa",
   "scope": "./",
+  "display_override": ["standalone", "minimal-ui", "browser"],
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#f7f4f6",
   "theme_color": "#ea5b96",
   "lang": "zh-CN",
+  "categories": ["productivity", "lifestyle", "utilities"],
   "icons": [
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "./assets/icon-calendar.svg",
       "sizes": "any",

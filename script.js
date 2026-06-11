@@ -3,6 +3,7 @@ const reminderStorageKey = "perennial-calendar-reminders-v1";
 const themeStorageKey = "perennial-calendar-theme-v1";
 const countdownSettingKey = "custom_countdowns";
 const todayScheduleAlertKey = "jiexu-calendar-today-schedule-alert-v1";
+const appShareUrl = "https://renrenlu.github.io/-/calendar-app/";
 let deferredInstallPrompt = null;
 const calendarData = window.JX_CALENDAR_DATA || {};
 const userStore = new window.JXUserStore();
@@ -123,6 +124,7 @@ const dom = {
   quoteSource: document.querySelector("#quoteSource"),
   installAppButton: document.querySelector("#installAppButton"),
   installHintText: document.querySelector("#installHintText"),
+  shareAppButton: document.querySelector("#shareAppButton"),
   themeNameText: document.querySelector("#themeNameText"),
   themePresetList: document.querySelector("#themePresetList"),
   toolShortcuts: [...document.querySelectorAll("[data-tool-jump]")],
@@ -201,6 +203,7 @@ async function init() {
   dom.prevMonthButton.addEventListener("click", () => shiftMonth(-1));
   dom.nextMonthButton.addEventListener("click", () => shiftMonth(1));
   dom.installAppButton.addEventListener("click", handleInstallClick);
+  dom.shareAppButton?.addEventListener("click", handleShareClick);
 
   dom.scheduleForm.addEventListener("submit", handleScheduleSubmit);
   dom.scheduleEditCancelButton.addEventListener("click", resetScheduleForm);
@@ -833,7 +836,7 @@ async function handleCountdownSubmit(event) {
 
 async function handleInstallClick() {
   if (!deferredInstallPrompt) {
-    setInstallHint("当前设备暂不支持安装入口。");
+    setInstallHint(getManualInstallHint());
     return;
   }
 
@@ -844,6 +847,33 @@ async function handleInstallClick() {
   }
   deferredInstallPrompt = null;
   dom.installAppButton.classList.add("is-hidden");
+}
+
+async function handleShareClick() {
+  const shareData = {
+    title: "有期日历",
+    text: "这个倒计时万年历工具可以直接添加到手机桌面。",
+    url: appShareUrl
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      setInstallHint("已打开分享面板，可以直接发给朋友。");
+      return;
+    } catch (error) {
+      if (error?.name === "AbortError") {
+        return;
+      }
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(appShareUrl);
+    setInstallHint("链接已复制，可以发给朋友或生成二维码。");
+  } catch (error) {
+    setInstallHint(`复制链接：${appShareUrl}`);
+  }
 }
 
 function renderDateDiffResult(text) {
@@ -1361,12 +1391,29 @@ function setInstallHint(text) {
   }
 }
 
+function getManualInstallHint() {
+  if (isStandaloneApp()) {
+    return "已经是桌面 App 模式，可以直接从手机桌面打开。";
+  }
+  return "iPhone 点分享后选“添加到主屏幕”；安卓可在浏览器菜单里选择“安装应用”。";
+}
+
+function isStandaloneApp() {
+  return window.matchMedia?.("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
 function bindInstallPrompt() {
+  setInstallHint(getManualInstallHint());
+
+  if (isStandaloneApp()) {
+    dom.installAppButton.classList.add("is-hidden");
+  }
+
   window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
     deferredInstallPrompt = event;
     dom.installAppButton.classList.remove("is-hidden");
-    setInstallHint("当前设备支持安装。");
+    setInstallHint("当前设备支持一键安装，点“安装 App”即可添加到桌面。");
   });
 
   window.addEventListener("appinstalled", () => {
@@ -1381,7 +1428,7 @@ function registerServiceWorker() {
     return;
   }
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js?v=29").catch(() => {
+    navigator.serviceWorker.register("./service-worker.js?v=35").catch(() => {
       setInstallHint("当前页面可正常使用。");
     });
   });
