@@ -1,4 +1,4 @@
-const CACHE_NAME = "jiexu-calendar-v34";
+const CACHE_NAME = "jiexu-calendar-v35";
 const APP_ASSETS = [
   "./",
   "./index.html",
@@ -7,7 +7,10 @@ const APP_ASSETS = [
   "./script.js",
   "./user-data-store.js",
   "./manifest.webmanifest",
-  "./assets/icon-calendar.svg"
+  "./assets/icon-calendar.svg",
+  "./assets/apple-touch-icon.png",
+  "./assets/icon-192.png",
+  "./assets/icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {

@@ -8,14 +8,18 @@
       name="description"
       content="有期日历——倒计时万年历工具，融合公历、农历、节气、法定节假日、轻量黄历、个人安排、倒计时与拼假建议。"
     />
+    <meta name="application-name" content="有期日历" />
     <meta name="theme-color" content="#ea5b96" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="有期日历" />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" href="./assets/icon-calendar.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./assets/icon-calendar.svg" />
-    <link rel="stylesheet" href="./styles.css?v=34" />
+    <link rel="icon" href="./assets/icon-192.png" sizes="192x192" type="image/png" />
+    <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
+    <link rel="stylesheet" href="./styles.css?v=35" />
   </head>
   <body>
     <div class="app-shell">
@@ -69,6 +73,18 @@
                 <button type="button" class="theme-swatch" data-theme-preset="amber" aria-label="黑金模式"></button>
                 <button type="button" class="theme-swatch" data-theme-preset="tiffany" aria-label="提夫尼蓝模式"></button>
               </div>
+            </div>
+            <div class="install-card">
+              <div class="card-head">
+                <p class="panel-label">添加到桌面</p>
+                <span>像 App 一样打开</span>
+              </div>
+              <p id="installHintText">扫码或点链接打开后，可添加到手机桌面。</p>
+              <div class="install-steps">
+                <span>iPhone：分享 → 添加到主屏幕</span>
+                <span>安卓：菜单 → 安装应用</span>
+              </div>
+              <button type="button" class="button secondary small" id="shareAppButton">分享给朋友</button>
             </div>
           </aside>
         </section>
@@ -287,6 +303,6 @@
 
     <script src="./calendar-data.js"></script>
     <script src="./user-data-store.js"></script>
-    <script src="./script.js?v=34"></script>
+    <script src="./script.js?v=35"></script>
   </body>
 </html>

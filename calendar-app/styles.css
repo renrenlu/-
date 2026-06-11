@@ -469,7 +469,8 @@ h3 {
   font-style: normal;
 }
 
-.theme-lab {
+.theme-lab,
+.install-card {
   display: grid;
   gap: 14px;
   padding: 18px;
@@ -483,10 +484,33 @@ h3 {
   align-items: center;
 }
 
-.theme-lab .card-head span {
+.theme-lab .card-head span,
+.install-card .card-head span {
   color: var(--accent-deep);
   font-size: 12px;
   font-weight: 800;
+}
+
+.install-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.install-steps {
+  display: grid;
+  gap: 8px;
+}
+
+.install-steps span {
+  display: block;
+  padding: 9px 12px;
+  border-radius: 14px;
+  color: var(--accent-dark);
+  font-size: 12px;
+  font-weight: 800;
+  background: var(--accent-soft-2);
 }
 
 .theme-presets {
@@ -1742,7 +1766,8 @@ h2 {
 }
 
 .today-quote,
-.theme-lab {
+.theme-lab,
+.install-card {
   padding: 14px;
   border-radius: 20px;
 }
@@ -1759,6 +1784,24 @@ h2 {
 .theme-swatch {
   width: 36px;
   height: 36px;
+}
+
+.install-card {
+  gap: 10px;
+}
+
+.install-card p {
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.install-steps {
+  gap: 6px;
+}
+
+.install-steps span {
+  padding: 8px 10px;
+  font-size: 11px;
 }
 
 .calendar-section,
