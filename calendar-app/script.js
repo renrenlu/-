@@ -2,6 +2,7 @@ const today = startOfDay(new Date());
 const reminderStorageKey = "perennial-calendar-reminders-v1";
 const themeStorageKey = "perennial-calendar-theme-v1";
 const countdownSettingKey = "custom_countdowns";
+const todayScheduleAlertKey = "jiexu-calendar-today-schedule-alert-v1";
 let deferredInstallPrompt = null;
 const calendarData = window.JX_CALENDAR_DATA || {};
 const userStore = new window.JXUserStore();
@@ -213,6 +214,7 @@ async function init() {
   registerServiceWorker();
 
   renderAll();
+  remindTodaySchedulesOnOpen();
 }
 
 async function hydrateUserState() {
@@ -1218,7 +1220,35 @@ function bindScheduleModal() {
   });
 }
 
-function openScheduleModalForDate(date) {
+function remindTodaySchedulesOnOpen() {
+  const schedules = getSchedulesForDate(today);
+  if (!schedules.length || !dom.scheduleModal) {
+    return;
+  }
+
+  const alertFingerprint = getTodayScheduleAlertFingerprint(schedules);
+  try {
+    if (window.localStorage.getItem(todayScheduleAlertKey) === alertFingerprint) {
+      return;
+    }
+    window.localStorage.setItem(todayScheduleAlertKey, alertFingerprint);
+  } catch (error) {
+    console.warn("Today schedule alert marker unavailable.", error);
+  }
+
+  window.setTimeout(() => {
+    openScheduleModalForDate(today, { subtitlePrefix: "今日提醒" });
+  }, 450);
+}
+
+function getTodayScheduleAlertFingerprint(schedules) {
+  const scheduleSignature = schedules
+    .map((item) => `${item.id}:${item.title}:${item.time || ""}:${item.note || ""}:${item.done ? "1" : "0"}`)
+    .join("|");
+  return `${formatISO(today)}:${scheduleSignature}`;
+}
+
+function openScheduleModalForDate(date, options = {}) {
   const schedules = getSchedulesForDate(date);
   if (!schedules.length || !dom.scheduleModal) {
     closeScheduleModal();
@@ -1226,7 +1256,9 @@ function openScheduleModalForDate(date) {
   }
 
   dom.scheduleModalTitle.textContent = formatDateTitle(date);
-  dom.scheduleModalSubtitle.textContent = `共 ${schedules.length} 项安排`;
+  dom.scheduleModalSubtitle.textContent = options.subtitlePrefix
+    ? `${options.subtitlePrefix} · 共 ${schedules.length} 项安排`
+    : `共 ${schedules.length} 项安排`;
   dom.scheduleModalList.innerHTML = schedules
     .map((item) => {
       const timeText = item.time || "全天";
