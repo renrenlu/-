@@ -2,7 +2,7 @@ const today = startOfDay(new Date());
 const reminderStorageKey = "perennial-calendar-reminders-v1";
 const themeStorageKey = "perennial-calendar-theme-v1";
 const countdownSettingKey = "custom_countdowns";
-const todayScheduleAlertKey = "jiexu-calendar-today-schedule-alert-v1";
+const scheduleAlertStorageKey = "jiexu-calendar-schedule-alerts-v1";
 const appShareUrl = "https://renrenlu.github.io/-/calendar-app/";
 let deferredInstallPrompt = null;
 const calendarData = window.JX_CALENDAR_DATA || {};
@@ -112,6 +112,7 @@ const state = {
   schedules: [],
   customCountdowns: [],
   editingScheduleId: null,
+  pendingScheduleAlerts: [],
   theme: { preset: "rose" }
 };
 
@@ -1251,31 +1252,67 @@ function bindScheduleModal() {
 }
 
 function remindTodaySchedulesOnOpen() {
-  const schedules = getSchedulesForDate(today);
-  if (!schedules.length || !dom.scheduleModal) {
+  if (!dom.scheduleModal) {
     return;
   }
 
-  const alertFingerprint = getTodayScheduleAlertFingerprint(schedules);
-  try {
-    if (window.localStorage.getItem(todayScheduleAlertKey) === alertFingerprint) {
-      return;
-    }
-    window.localStorage.setItem(todayScheduleAlertKey, alertFingerprint);
-  } catch (error) {
-    console.warn("Today schedule alert marker unavailable.", error);
-  }
+  state.pendingScheduleAlerts = [
+    { date: today, type: "same-day", subtitlePrefix: "今日提醒" },
+    { date: addDays(today, 1), type: "day-before", subtitlePrefix: "提前一天提醒" }
+  ]
+    .map((alert) => ({ ...alert, schedules: getSchedulesForDate(alert.date) }))
+    .filter((alert) => alert.schedules.length && shouldShowScheduleAlert(alert));
 
   window.setTimeout(() => {
-    openScheduleModalForDate(today, { subtitlePrefix: "今日提醒" });
+    openNextScheduleAlert();
   }, 450);
 }
 
-function getTodayScheduleAlertFingerprint(schedules) {
-  const scheduleSignature = schedules
+function openNextScheduleAlert() {
+  const nextAlert = state.pendingScheduleAlerts.shift();
+  if (!nextAlert) {
+    return;
+  }
+
+  markScheduleAlertShown(nextAlert);
+  openScheduleModalForDate(nextAlert.date, { subtitlePrefix: nextAlert.subtitlePrefix });
+}
+
+function shouldShowScheduleAlert(alert) {
+  const alertMarkers = readScheduleAlertMarkers();
+  return alertMarkers[getScheduleAlertMarkerKey(alert)] !== getScheduleAlertFingerprint(alert);
+}
+
+function markScheduleAlertShown(alert) {
+  const alertMarkers = readScheduleAlertMarkers();
+  alertMarkers[getScheduleAlertMarkerKey(alert)] = getScheduleAlertFingerprint(alert);
+  try {
+    window.localStorage.setItem(scheduleAlertStorageKey, JSON.stringify(alertMarkers));
+  } catch (error) {
+    console.warn("Schedule alert marker unavailable.", error);
+  }
+}
+
+function readScheduleAlertMarkers() {
+  try {
+    const raw = window.localStorage.getItem(scheduleAlertStorageKey);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  } catch (error) {
+    console.warn("Failed to read schedule alert marker.", error);
+    return {};
+  }
+}
+
+function getScheduleAlertMarkerKey(alert) {
+  return `${alert.type}:${formatISO(alert.date)}`;
+}
+
+function getScheduleAlertFingerprint(alert) {
+  const scheduleSignature = alert.schedules
     .map((item) => `${item.id}:${item.title}:${item.time || ""}:${item.note || ""}:${item.done ? "1" : "0"}`)
     .join("|");
-  return `${formatISO(today)}:${scheduleSignature}`;
+  return `${alert.type}:${formatISO(alert.date)}:${scheduleSignature}`;
 }
 
 function openScheduleModalForDate(date, options = {}) {
@@ -1323,6 +1360,9 @@ function closeScheduleModal() {
   document.body.classList.remove("has-modal-open");
   window.setTimeout(() => {
     dom.scheduleModal.hidden = true;
+    if (state.pendingScheduleAlerts.length) {
+      window.setTimeout(openNextScheduleAlert, 120);
+    }
   }, 180);
 }
 
